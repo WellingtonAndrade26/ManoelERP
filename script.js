@@ -1461,12 +1461,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 })
 
-if (imprimirRelatorio) {
-  imprimirRelatorio.addEventListener("click", () => {
-    window.print()
-  })
-}
-
 carregarClientes()
 
 carregarProdutosSaida()
