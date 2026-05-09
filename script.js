@@ -675,7 +675,7 @@ for (const ingrediente of receita.ingredientes) {
 
     modalFabricacao.classList.remove("active")
 
-    document.getElementById("fabricacaoProduto").value = ""
+    document.getElementById("fabricacaoReceita").value = ""
     document.getElementById("fabricacaoQuantidade").value = ""
     document.getElementById("fabricacaoCustoTotal").value = ""
     document.getElementById("fabricacaoVendaKg").value = ""
