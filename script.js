@@ -1450,7 +1450,7 @@ const imprimirRelatorio = document.getElementById("imprimirRelatorio")
 if (gerarRelatorio) {
   gerarRelatorio.addEventListener("click", () => {
     carregarRelatorios()
-    alert("Relatório gerado com sucesso!")
+    alert("Em breve será possível gerar relatórios personalizados.")
   })
 }
 
@@ -1511,4 +1511,13 @@ if (toggleDark) {
       toggleDark.innerText = "🌙 Dark mode"
     }
   })
+}
+
+if ("serviceWorker" in navigator) {
+  const caminhoSW =
+    window.location.pathname.includes("/pages/")
+      ? "../service-worker.js"
+      : "./service-worker.js"
+
+  navigator.serviceWorker.register(caminhoSW)
 }
