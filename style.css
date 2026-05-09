@@ -735,6 +735,7 @@ html.dark .menu-btn.active {
   }
 
   .sidebar {
+    display: flex !important;
     position: fixed;
     top: 0;
     left: -290px;
@@ -750,15 +751,33 @@ html.dark .menu-btn.active {
   }
 
   .content {
-    padding: 18px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
   }
 
   .top {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .top > div h2,
+  .top > div p {
     display: none;
+  }
+
+  .top .btn-primary,
+  .top .btn-light {
+    width: 100%;
   }
 
   .cards {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .filters {
@@ -773,15 +792,14 @@ html.dark .menu-btn.active {
     width: 100%;
   }
 
-  table {
-    font-size: 13px;
-  }
-
   .panel {
     overflow-x: auto;
   }
-}
 
+  table {
+    min-width: 700px;
+  }
+}
 @media (max-width: 900px) {
   .sidebar {
     display: flex !important;
@@ -798,4 +816,40 @@ html.dark .menu-btn.active {
   .sidebar.active {
     left: 0;
   }
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.app {
+  width: 100%;
+  max-width: 100%;
+}
+
+.content {
+  width: 100%;
+  max-width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.panel {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.card {
+  width: 100%;
+  box-sizing: border-box;
 }
