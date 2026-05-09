@@ -51,7 +51,35 @@
             <p>Controle entradas, saídas e alertas de produtos.</p>
           </div>
 
-          <button class="btn-primary">+ Entrada no estoque</button>
+          <button class="btn-primary" id="abrirModalEntrada">
+  + Entrada no estoque
+</button>
+<div class="modal" id="modalSaida">
+  <div class="modal-content">
+    <h2>Saída do estoque</h2>
+
+    <select id="produtoSaida">
+      <option value="">Selecione o produto</option>
+    </select>
+
+    <input
+      type="number"
+      id="quantidadeSaida"
+      placeholder="Quantidade"
+    />
+
+    <div class="modal-buttons">
+      <button id="salvarSaida" class="btn-primary">
+        Salvar saída
+      </button>
+
+      <button id="fecharModalSaida" class="btn-light">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
         </header>
 
         <section class="cards">
@@ -106,26 +134,7 @@
               </tr>
             </thead>
 
-            <tbody>
-              <tr>
-                <td>Linguiça Artesanal</td>
-                <td class="orange">25 kg</td>
-                <td>10 kg</td>
-                <td>08/05/2026</td>
-                <td class="green">Disponível</td>
-                <td>
-                  <button>Entrada</button>
-                  <button>Saída</button>
-                </td>
-              </tr>
-
-              <tr>
-                <td>Bacon Defumado</td>
-                <td class="red">4 kg</td>
-                <td>8 kg</td>
-                <td>07/05/2026</td>
-                <td class="red">Baixo estoque</td>
-                <td>
+            <tbody id="tabelaEstoque"></tbody>
                   <button>Entrada</button>
                   <button>Saída</button>
                 </td>
@@ -135,7 +144,31 @@
         </section>
       </main>
     </div>
+<div class="modal" id="modalEntrada">
+  <div class="modal-content">
+    <h2>Entrada no estoque</h2>
 
+    <select id="produtoEntrada">
+      <option value="">Selecione o produto</option>
+    </select>
+
+    <input
+      type="number"
+      id="quantidadeEntrada"
+      placeholder="Quantidade"
+    />
+
+    <div class="modal-buttons">
+      <button id="salvarEntrada" class="btn-primary">
+        Salvar entrada
+      </button>
+
+      <button id="fecharModalEntrada" class="btn-light">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
     <script src="../data/produtos.js"></script>
 <script src="../data/vendas.js"></script>
 <script src="../data/materiaPrima.js"></script>

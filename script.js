@@ -1058,6 +1058,414 @@ function carregarAlertasDashboard() {
 }
 
 
+const modalEntrada = document.getElementById("modalEntrada")
+const abrirModalEntrada = document.getElementById("abrirModalEntrada")
+const fecharModalEntrada = document.getElementById("fecharModalEntrada")
+const salvarEntrada = document.getElementById("salvarEntrada")
+const produtoEntrada = document.getElementById("produtoEntrada")
+
+function carregarProdutosEntrada() {
+  if (!produtoEntrada) return
+
+  produtoEntrada.innerHTML = `
+    <option value="">Selecione o produto</option>
+  `
+
+  produtosSalvos.forEach((produto) => {
+    produtoEntrada.innerHTML += `
+      <option value="${produto.id}">
+        ${produto.nome} - Estoque: ${produto.estoque}
+      </option>
+    `
+  })
+}
+
+if (abrirModalEntrada) {
+  abrirModalEntrada.addEventListener("click", () => {
+    carregarProdutosEntrada()
+    modalEntrada.classList.add("active")
+  })
+}
+
+if (fecharModalEntrada) {
+  fecharModalEntrada.addEventListener("click", () => {
+    modalEntrada.classList.remove("active")
+  })
+}
+
+if (salvarEntrada) {
+  salvarEntrada.addEventListener("click", () => {
+    const produtoId = Number(produtoEntrada.value)
+    const quantidade = Number(
+      document.getElementById("quantidadeEntrada").value
+    )
+
+    if (!produtoId || !quantidade) {
+      alert("Selecione o produto e informe a quantidade")
+      return
+    }
+
+    const produto = produtosSalvos.find(
+      (item) => item.id === produtoId
+    )
+
+    if (!produto) return
+
+    produto.estoque += quantidade
+
+    salvarLocalStorage()
+carregarProdutos()
+carregarEstoque()
+atualizarDashboard()
+atualizarResumo()
+carregarProdutosEntrada()
+carregarProdutosSaida()
+carregarGraficosDashboard()
+carregarAlertasDashboard()
+
+    modalEntrada.classList.remove("active")
+
+    produtoEntrada.value = ""
+    document.getElementById("quantidadeEntrada").value = ""
+  })
+}
+
+const tabelaEstoque =
+  document.getElementById("tabelaEstoque")
+
+function carregarEstoque() {
+  if (!tabelaEstoque) return
+
+  tabelaEstoque.innerHTML = ""
+
+  produtosSalvos.forEach((produto) => {
+    tabelaEstoque.innerHTML += `
+      <tr>
+        <td>${produto.nome}</td>
+
+        <td class="${
+          produto.estoque <= 5 ? "red" : "orange"
+        }">
+          ${produto.estoque} kg
+        </td>
+
+        <td>10 kg</td>
+
+        <td>
+          ${new Date().toLocaleDateString("pt-BR")}
+        </td>
+
+        <td class="${
+          produto.estoque <= 5 ? "red" : "green"
+        }">
+          ${
+            produto.estoque <= 5
+              ? "Baixo estoque"
+              : "Disponível"
+          }
+        </td>
+
+        <td>
+          <button onclick="abrirEntradaRapida(${produto.id})">
+            Entrada
+          </button>
+
+          <button onclick="abrirSaidaRapida(${produto.id})">
+            Saída
+          </button>
+        </td>
+      </tr>
+    `
+  })
+}
+
+function abrirEntradaRapida(id) {
+  carregarProdutosEntrada()
+
+  produtoEntrada.value = id
+
+  modalEntrada.classList.add("active")
+}
+
+const modalSaida = document.getElementById("modalSaida")
+const fecharModalSaida = document.getElementById("fecharModalSaida")
+const salvarSaida = document.getElementById("salvarSaida")
+const produtoSaida = document.getElementById("produtoSaida")
+
+function carregarProdutosSaida() {
+  if (!produtoSaida) return
+
+  produtoSaida.innerHTML = `
+    <option value="">Selecione o produto</option>
+  `
+
+  produtosSalvos.forEach((produto) => {
+    produtoSaida.innerHTML += `
+      <option value="${produto.id}">
+        ${produto.nome} - Estoque: ${produto.estoque}
+      </option>
+    `
+  })
+}
+
+function abrirSaidaRapida(id) {
+  carregarProdutosSaida()
+
+  produtoSaida.value = id
+
+  modalSaida.classList.add("active")
+}
+
+if (fecharModalSaida) {
+  fecharModalSaida.addEventListener("click", () => {
+    modalSaida.classList.remove("active")
+  })
+}
+
+if (salvarSaida) {
+  salvarSaida.addEventListener("click", () => {
+    const produtoId = Number(produtoSaida.value)
+    const quantidade = Number(document.getElementById("quantidadeSaida").value)
+
+    if (!produtoId || !quantidade) {
+      alert("Selecione o produto e informe a quantidade")
+      return
+    }
+
+    const produto = produtosSalvos.find((item) => item.id === produtoId)
+
+    if (!produto) return
+
+    if (quantidade > produto.estoque) {
+      alert("Estoque insuficiente")
+      return
+    }
+
+    produto.estoque -= quantidade
+
+    salvarLocalStorage()
+    carregarProdutos()
+    carregarEstoque()
+    atualizarDashboard()
+    atualizarResumo()
+    carregarProdutosEntrada()
+    carregarProdutosSaida()
+
+    modalSaida.classList.remove("active")
+
+    produtoSaida.value = ""
+    document.getElementById("quantidadeSaida").value = ""
+  })
+}
+
+const modalCliente = document.getElementById("modalCliente")
+const abrirModalCliente = document.getElementById("abrirModalCliente")
+const fecharModalCliente = document.getElementById("fecharModalCliente")
+const salvarCliente = document.getElementById("salvarCliente")
+const tabelaClientes = document.getElementById("tabelaClientes")
+
+let clientesSalvos =
+  JSON.parse(localStorage.getItem("clientes")) || clientes
+
+function salvarClientesLocalStorage() {
+  localStorage.setItem("clientes", JSON.stringify(clientesSalvos))
+}
+
+function carregarClientes() {
+  if (!tabelaClientes) return
+
+  tabelaClientes.innerHTML = ""
+
+  clientesSalvos.forEach((cliente) => {
+    tabelaClientes.innerHTML += `
+      <tr>
+        <td>${cliente.nome}</td>
+        <td>${cliente.telefone}</td>
+        <td>${cliente.endereco}</td>
+        <td>${cliente.observacao}</td>
+        <td class="green">Ativo</td>
+        <td>
+          <button onclick="excluirCliente(${cliente.id})">
+            Excluir
+          </button>
+        </td>
+      </tr>
+    `
+  })
+}
+
+function atualizarDashboardClientes() {
+  const totalEl = document.getElementById("clientesTotal")
+  const ativosEl = document.getElementById("clientesAtivos")
+  const pendentesEl = document.getElementById("clientesPendentes")
+  const recebimentosEl = document.getElementById("clientesRecebimentos")
+
+  if (!totalEl) return
+
+  totalEl.innerText = clientesSalvos.length
+  ativosEl.innerText = clientesSalvos.length
+  pendentesEl.innerText = "R$ 0"
+  recebimentosEl.innerText = "R$ 0"
+}
+
+function excluirCliente(id) {
+  clientesSalvos = clientesSalvos.filter(
+    (cliente) => cliente.id !== id
+  )
+
+  salvarClientesLocalStorage()
+  carregarClientes()
+}
+
+if (abrirModalCliente) {
+  abrirModalCliente.addEventListener("click", () => {
+    modalCliente.classList.add("active")
+  })
+}
+
+if (fecharModalCliente) {
+  fecharModalCliente.addEventListener("click", () => {
+    modalCliente.classList.remove("active")
+  })
+}
+
+if (salvarCliente) {
+  salvarCliente.addEventListener("click", () => {
+    const nome = document.getElementById("clienteNome").value
+    const telefone = document.getElementById("clienteTelefone").value
+    const endereco = document.getElementById("clienteEndereco").value
+    const observacao = document.getElementById("clienteObservacao").value
+
+    if (!nome || !telefone) {
+      alert("Preencha pelo menos nome e telefone")
+      return
+    }
+
+    const novoCliente = {
+      id: Date.now(),
+      nome,
+      telefone,
+      endereco,
+      observacao,
+    }
+
+    clientesSalvos.push(novoCliente)
+
+    salvarClientesLocalStorage()
+    carregarClientes()
+atualizarDashboardClientes()
+
+    modalCliente.classList.remove("active")
+
+    document.getElementById("clienteNome").value = ""
+    document.getElementById("clienteTelefone").value = ""
+    document.getElementById("clienteEndereco").value = ""
+    document.getElementById("clienteObservacao").value = ""
+  })
+}
+
+const tabelaRelatorios =
+  document.getElementById("tabelaRelatorios")
+
+function carregarRelatorios() {
+  if (!tabelaRelatorios) return
+
+  const faturamentoEl =
+    document.getElementById("relatorioFaturamento")
+
+  const lucroEl =
+    document.getElementById("relatorioLucro")
+
+  const pedidosEl =
+    document.getElementById("relatorioProdutos")
+
+  const maisVendidoEl =
+    document.getElementById("relatorioMaisVendido")
+
+  tabelaRelatorios.innerHTML = ""
+
+  let faturamento = 0
+  let lucro = 0
+
+  const produtosVendidos = {}
+
+  vendasSalvas.forEach((venda) => {
+    faturamento += venda.total
+    lucro += venda.lucro
+
+    if (!produtosVendidos[venda.produto]) {
+      produtosVendidos[venda.produto] = 0
+    }
+
+    produtosVendidos[venda.produto] += venda.quantidade
+
+    tabelaRelatorios.innerHTML += `
+      <tr>
+        <td>${venda.cliente}</td>
+
+        <td>${venda.produto}</td>
+
+        <td>${venda.quantidade}</td>
+
+        <td>${venda.pagamento}</td>
+
+        <td class="green">
+          R$ ${venda.total.toFixed(2)}
+        </td>
+
+        <td>
+          ${venda.pagamento === "Fiado"
+            ? "Pendente"
+            : "Pago"}
+        </td>
+      </tr>
+    `
+  })
+
+  faturamentoEl.innerText =
+    `R$ ${faturamento.toFixed(2)}`
+
+  lucroEl.innerText =
+    `R$ ${lucro.toFixed(2)}`
+
+  pedidosEl.innerText =
+    vendasSalvas.length
+
+  let maisVendido = "Nenhum"
+  let maiorQuantidade = 0
+
+  for (const produto in produtosVendidos) {
+    if (produtosVendidos[produto] > maiorQuantidade) {
+      maiorQuantidade = produtosVendidos[produto]
+      maisVendido = produto
+    }
+  }
+
+  maisVendidoEl.innerText = maisVendido
+}
+
+const gerarRelatorio = document.getElementById("gerarRelatorio")
+const imprimirRelatorio = document.getElementById("imprimirRelatorio")
+
+if (gerarRelatorio) {
+  gerarRelatorio.addEventListener("click", () => {
+    carregarRelatorios()
+    alert("Relatório gerado com sucesso!")
+  })
+}
+
+if (imprimirRelatorio) {
+  imprimirRelatorio.addEventListener("click", () => {
+    window.print()
+  })
+}
+
+carregarClientes()
+
+carregarProdutosSaida()
+
+carregarProdutosEntrada()
+
 
 carregarMateriasReceita()
 
@@ -1081,6 +1489,9 @@ atualizarResumo()
 atualizarDashboardVendas()
 carregarGraficosDashboard()
 carregarAlertasDashboard()
+carregarEstoque() 
+atualizarDashboardClientes()
+carregarRelatorios()
 
 const toggleDark = document.getElementById("toggleDark")
 

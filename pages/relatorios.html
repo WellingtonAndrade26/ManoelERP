@@ -70,9 +70,9 @@
             </p>
           </div>
 
-          <button class="btn-primary">
-            + Gerar relatório
-          </button>
+          <button class="btn-primary" id="gerarRelatorio">
+  Gerar relatório
+</button>
 
         </header>
 
@@ -82,9 +82,7 @@
           <div class="card">
             <span>Faturamento mensal</span>
 
-            <strong class="green">
-              R$ 18.450
-            </strong>
+            <strong id="relatorioFaturamento">R$ 0</strong>
 
             <p>Total do mês</p>
           </div>
@@ -92,9 +90,7 @@
           <div class="card">
             <span>Lucro mensal</span>
 
-            <strong class="green">
-              R$ 7.220
-            </strong>
+            <strong id="relatorioLucro">R$ 0</strong>
 
             <p>Margem atual</p>
           </div>
@@ -102,21 +98,17 @@
           <div class="card">
             <span>Pedidos realizados</span>
 
-            <strong>
-              248
-            </strong>
-
+            <strong id="relatorioProdutos">0</strong>
             <p>Total de vendas</p>
           </div>
 
           <div class="card">
             <span>Produto mais vendido</span>
 
-            <strong>
-              Linguiça Artesanal
-            </strong>
-
-            <p>Maior saída</p>
+            <strong id="relatorioMaisVendido">
+  Nenhum
+</strong>
+            <p>Produto destaque</p>
           </div>
 
         </section>
@@ -137,9 +129,9 @@
               <option>Este mês</option>
             </select>
 
-            <button class="btn-light">
-              Exportar PDF
-            </button>
+            <button class="btn-light" id="imprimirRelatorio">
+  Exportar / Imprimir
+</button>
 
           </div>
 
@@ -156,67 +148,7 @@
               </tr>
             </thead>
 
-            <tbody>
-
-              <tr>
-
-                <td>
-                  Relatório Mensal
-                </td>
-
-                <td>
-                  Maio 2026
-                </td>
-
-                <td class="green">
-                  R$ 18.450
-                </td>
-
-                <td class="green">
-                  R$ 7.220
-                </td>
-
-                <td class="green">
-                  Finalizado
-                </td>
-
-                <td>
-                  <button>Visualizar</button>
-
-                  <button>Baixar</button>
-                </td>
-
-              </tr>
-
-              <tr>
-
-                <td>
-                  Relatório Semanal
-                </td>
-
-                <td>
-                  Semana atual
-                </td>
-
-                <td class="green">
-                  R$ 4.280
-                </td>
-
-                <td class="green">
-                  R$ 1.640
-                </td>
-
-                <td class="orange">
-                  Em andamento
-                </td>
-
-                <td>
-                  <button>Visualizar</button>
-
-                  <button>Baixar</button>
-                </td>
-
-              </tr>
+            <tbody id="tabelaRelatorios"></tbody>
 
             </tbody>
 

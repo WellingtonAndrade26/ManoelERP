@@ -67,9 +67,9 @@
             </p>
           </div>
 
-          <button class="btn-primary">
-            + Novo cliente
-          </button>
+          <button class="btn-primary" id="abrirModalCliente">
+  + Novo cliente
+</button>
         </header>
 
         <!-- CARDS -->
@@ -78,7 +78,7 @@
           <div class="card">
             <span>Total clientes</span>
 
-            <strong>58</strong>
+            <strong id="clientesTotal">0</strong>
 
             <p>Clientes cadastrados</p>
           </div>
@@ -86,7 +86,7 @@
           <div class="card">
             <span>Clientes ativos</span>
 
-            <strong>42</strong>
+            <strong id="clientesAtivos">0</strong>
 
             <p>Comprando regularmente</p>
           </div>
@@ -94,9 +94,8 @@
           <div class="card">
             <span>Valor pendente</span>
 
-            <strong class="red">
-              R$ 1.240
-            </strong>
+           <strong class="red" id="clientesPendentes">R$ 0</strong>
+              
 
             <p>Fiados pendentes</p>
           </div>
@@ -104,9 +103,7 @@
           <div class="card">
             <span>Pagamentos hoje</span>
 
-            <strong class="green">
-              R$ 320
-            </strong>
+            <strong class="green" id="clientesRecebimentos">R$ 0</strong>
 
             <p>Recebimentos</p>
           </div>
@@ -146,37 +143,7 @@
               </tr>
             </thead>
 
-            <tbody>
-
-              <tr>
-                <td>
-                  João Silva
-                </td>
-
-                <td>
-                  (19) 99999-9999
-                </td>
-
-                <td>
-                  12 pedidos
-                </td>
-
-                <td class="red">
-                  R$ 180,00
-                </td>
-
-                <td class="orange">
-                  Pendente
-                </td>
-
-                <td>
-                  <button>Editar</button>
-
-                  <button>Excluir</button>
-                </td>
-              </tr>
-
-            </tbody>
+            <tbody id="tabelaClientes"></tbody>
 
           </table>
 
@@ -185,11 +152,33 @@
       </main>
     </div>
 
+    <div class="modal" id="modalCliente">
+  <div class="modal-content">
+    <h2>Novo Cliente</h2>
+
+    <input type="text" id="clienteNome" placeholder="Nome do cliente" />
+    <input type="text" id="clienteTelefone" placeholder="Telefone" />
+    <input type="text" id="clienteEndereco" placeholder="Endereço" />
+    <input type="text" id="clienteObservacao" placeholder="Observação" />
+
+    <div class="modal-buttons">
+      <button id="salvarCliente" class="btn-primary">
+        Salvar cliente
+      </button>
+
+      <button id="fecharModalCliente" class="btn-light">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
     <script src="../data/produtos.js"></script>
 <script src="../data/vendas.js"></script>
 <script src="../data/materiaPrima.js"></script>
 <script src="../data/fabricacoes.js"></script>
 <script src="../data/receitas.js"></script>
+<script src="../data/clientes.js"></script>
 <script src="../script.js"></script>
   </body>
 </html>
