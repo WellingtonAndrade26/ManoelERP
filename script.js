@@ -215,12 +215,21 @@ function carregarVendas() {
         <td>${venda.quantidade}</td>
         <td>${venda.pagamento}</td>
         <td class="green">R$ ${venda.total.toFixed(2)}</td>
-        <td class="${venda.pagamento === "Fiado" ? "orange" : "green"}">
-          ${venda.pagamento === "Fiado" ? "Pendente" : "Pago"}
-        </td>
-        <td>
-          <button onclick="excluirVenda(${venda.id})">Excluir</button>
-        </td>
+        <td class="${venda.status === "Pendente" ? "orange" : "green"}">
+  ${venda.status || (venda.pagamento === "Fiado" ? "Pendente" : "Pago")}
+</td>
+
+<td>
+  ${
+    venda.status === "Pendente"
+      ? `<button onclick="window.receberFiado(${venda.id})">
+  Receber
+</button>`
+      : ""
+  }
+
+  <button onclick="excluirVenda(${venda.id})">Excluir</button>
+</td>
       </tr>
     `
   })
@@ -230,26 +239,73 @@ function excluirVenda(id) {
   const venda = vendasSalvas.find((venda) => venda.id === id)
 
   if (venda) {
-    const produto = produtosSalvos.find((produto) => produto.id === venda.produtoId)
+    const produto = produtosSalvos.find(
+      (produto) => produto.id === venda.produtoId
+    )
+
     if (produto) {
       produto.estoque += venda.quantidade
     }
   }
 
   vendasSalvas = vendasSalvas.filter((venda) => venda.id !== id)
-  financeiroSalvo = financeiroSalvo.filter(
-  (movimentacao) => movimentacao.vendaId !== id
-)
 
-salvarFinanceiroLocalStorage()
+  financeiroSalvo = financeiroSalvo.filter(
+    (movimentacao) => movimentacao.vendaId !== id
+  )
 
   salvarVendasLocalStorage()
+  salvarFinanceiroLocalStorage()
   salvarLocalStorage()
+
   carregarVendas()
   carregarProdutos()
   atualizarDashboard()
   atualizarResumo()
   atualizarDashboardVendas()
+  carregarFinanceiro()
+  atualizarDashboardFinanceiro()
+  carregarRelatorios()
+}
+
+window.receberFiado = function (id) {
+  const venda = vendasSalvas.find((venda) => venda.id === id)
+
+  if (!venda) {
+    alert("Venda não encontrada")
+    return
+  }
+
+  if (venda.status === "Pago") {
+    alert("Essa venda já está paga")
+    return
+  }
+
+  venda.status = "Pago"
+
+  const novaMovimentacao = {
+    id: Date.now() + 30,
+    vendaId: venda.id,
+    descricao: `Recebimento fiado de ${venda.cliente}`,
+    tipo: "Entrada",
+    categoria: "Recebimento de fiado",
+    valor: venda.total,
+    data: new Date().toLocaleDateString("pt-BR"),
+  }
+
+  financeiroSalvo.push(novaMovimentacao)
+
+  salvarVendasLocalStorage()
+  salvarFinanceiroLocalStorage()
+
+  carregarVendas()
+  atualizarDashboardVendas()
+  carregarFinanceiro()
+  atualizarDashboardFinanceiro()
+  carregarRelatorios()
+  carregarAlertasDashboard()
+
+  alert("Pagamento recebido com sucesso!")
 }
 
 if (abrirModalVenda) {
@@ -287,15 +343,16 @@ if (salvarVenda) {
     }
 
     const novaVenda = {
-      id: Date.now(),
-      cliente,
-      produto: produto.nome,
-      produtoId: produto.id,
-      quantidade,
-      pagamento,
-      total: produto.venda * quantidade,
-      lucro: (produto.venda - produto.custo) * quantidade,
-    }
+  id: Date.now(),
+  cliente,
+  produto: produto.nome,
+  produtoId: produto.id,
+  quantidade,
+  pagamento,
+  total: produto.venda * quantidade,
+  lucro: (produto.venda - produto.custo) * quantidade,
+  status: pagamento === "Fiado" ? "Pendente" : "Pago",
+}
 
     vendasSalvas.push(novaVenda)
 produto.estoque -= quantidade
@@ -335,9 +392,9 @@ function atualizarDashboardVendas() {
     total += venda.total
     lucro += venda.lucro
 
-    if (venda.pagamento === "Fiado") {
-      fiado += venda.total
-    }
+    if (venda.status === "Pendente") {
+  fiado += venda.total
+}
   })
 
   vendasTotalEl.innerText = `R$ ${total.toFixed(2)}`
@@ -931,7 +988,7 @@ function carregarAlertasDashboard() {
     }
   })
 
-  const fiados = vendasSalvas.filter((venda) => venda.pagamento === "Fiado")
+  const fiados = vendasSalvas.filter((venda) => venda.status === "Pendente")
 
   if (fiados.length > 0) {
     alertas.push({
@@ -1538,5 +1595,14 @@ if (abrirMenuMobile && sidebar && overlayMenu) {
   overlayMenu.addEventListener("click", () => {
     sidebar.classList.remove("active")
     overlayMenu.classList.remove("active")
+  })
+
+  const linksMenu = sidebar.querySelectorAll("a")
+
+  linksMenu.forEach((link) => {
+    link.addEventListener("click", () => {
+      sidebar.classList.remove("active")
+      overlayMenu.classList.remove("active")
+    })
   })
 }
