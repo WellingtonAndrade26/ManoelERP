@@ -1495,6 +1495,9 @@ atualizarDashboardClientes()
 carregarRelatorios()
 
 document.addEventListener("DOMContentLoaded", () => {
+  const noIndex = window.location.pathname.endsWith("index.html") || window.location.pathname === "/"
+
+if (noIndex) {
   const toggleDark = document.getElementById("toggleDark")
 
   if (localStorage.getItem("tema") === "dark") {
@@ -1515,7 +1518,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
   }
-})
+}
 
 if ("serviceWorker" in navigator) {
   const caminhoSW =
