@@ -4,9 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Artesanais do Manoel</title>
+
     <link rel="stylesheet" href="./style.css" />
-    <link rel="manifest" href="./manifest.json" />
-    <meta name="theme-color" content="#2f7d1d" />
+<link rel="manifest" href="./manifest.json" />
+<meta name="theme-color" content="#2f7d1d" />
+
   </head>
 
   <body>
@@ -16,8 +18,8 @@
         <div>
           <div class="brand">
             <div class="logo">
-              <img src="./assets/logo.png" alt="Logo Artesanais do Manoel">
-            </div>
+  <img src="./assets/logo.png" alt="Logo Artesanais do Manoel">
+</div>  
             <div>
               <h1>Artesanais do Manoel</h1>
               <p>Controle de produtos, estoque e clientes</p>
@@ -25,16 +27,40 @@
           </div>
 
           <nav class="menu">
-            <a href="./index.html"><button class="menu-btn active">Resumo</button></a>
-            <a href="./pages/materia-prima.html"><button class="menu-btn">Matéria-prima</button></a>
-            <a href="./pages/produtos.html"><button class="menu-btn">Produtos</button></a>
-            <a href="./pages/fabricacao.html"><button class="menu-btn">Fabricação</button></a>
-            <a href="./pages/receitas.html"><button class="menu-btn">Receitas</button></a>
-            <a href="./pages/clientes.html"><button class="menu-btn">Clientes</button></a>
-            <a href="./pages/vendas.html"><button class="menu-btn">Vendas</button></a>
-            <a href="./pages/estoque.html"><button class="menu-btn">Estoque</button></a>
-            <a href="./pages/relatorios.html"><button class="menu-btn">Relatórios</button></a>
-          </nav>
+  <a href="./index.html">
+    <button class="menu-btn active">Resumo</button>
+  </a>
+  <a href="./pages/materia-prima.html">
+  <button class="menu-btn">Matéria-prima</button>
+</a>
+
+  <a href="./pages/produtos.html">
+    <button class="menu-btn">Produtos</button>
+  </a>
+
+  <a href="./pages/fabricacao.html">
+  <button class="menu-btn">Fabricação</button>
+</a>
+<a href="./pages/receitas.html">
+  <button class="menu-btn">Receitas</button>
+</a>
+
+  <a href="./pages/clientes.html">
+    <button class="menu-btn">Clientes</button>
+  </a>
+
+  <a href="./pages/vendas.html">
+    <button class="menu-btn">Vendas</button>
+  </a>
+
+  <a href="./pages/estoque.html">
+    <button class="menu-btn">Estoque</button>
+  </a>
+
+  <a href="./pages/relatorios.html">
+    <button class="menu-btn">Relatórios</button>
+  </a>
+</nav>
         </div>
 
         <div class="user">
@@ -50,69 +76,96 @@
       <!-- Conteúdo principal -->
       <main class="content">
         <header class="top">
+          
           <div>
-            <h2>Resumo</h2>
-            <p>Visão geral do sistema.</p>
+            <h2>Produtos</h2>
+            <p>Gerencie produtos, custos de fabricação e estoque.</p>
           </div>
 
-          <!-- FIX: inicializa texto do botão via JS, mas o elemento precisa existir -->
-          <button class="btn-light" id="toggleDark">🌙 Dark mode</button>
+    <button class="btn-light" id="toggleDark">
+  🌙 Dark mode
+</button>
         </header>
 
         <!-- Cards de resumo -->
         <section class="cards">
-          <div class="card">
-            <span>Faturamento</span>
-            <strong id="resumoFaturamento">R$ 0</strong>
-            <p>Total vendido</p>
-          </div>
-          <div class="card">
-            <span>Custos</span>
-            <strong id="resumoCustos">R$ 0</strong>
-            <p>Investimento total</p>
-          </div>
-          <div class="card">
-            <span>Lucro</span>
-            <strong id="resumoLucro">R$ 0</strong>
-            <p>Lucro estimado</p>
-          </div>
-          <div class="card">
-            <span>Estoque</span>
-            <strong id="resumoEstoque">0</strong>
-            <p>Itens cadastrados</p>
-          </div>
-        </section>
 
-        <section class="charts">
-          <div class="chart-card">
-            <h3>Vendas</h3>
-            <canvas id="graficoVendas"></canvas>
-          </div>
-          <div class="chart-card">
-            <h3>Estoque</h3>
-            <canvas id="graficoEstoque"></canvas>
-          </div>
-        </section>
+  <div class="card">
+    <span>Faturamento</span>
 
-        <section class="alerts">
-          <div class="alert-card">
-            <h3>Alertas inteligentes</h3>
-            <div id="listaAlertas"></div>
-          </div>
-        </section>
+    <strong id="resumoFaturamento">
+      R$ 0
+    </strong>
+
+    <p>Total vendido</p>
+  </div>
+
+  <div class="card">
+    <span>Custos</span>
+
+    <strong id="resumoCustos">
+      R$ 0
+    </strong>
+
+    <p>Investimento total</p>
+  </div>
+
+  <div class="card">
+    <span>Lucro</span>
+
+    <strong id="resumoLucro">
+      R$ 0
+    </strong>
+
+    <p>Lucro estimado</p>
+  </div>
+
+  <div class="card">
+    <span>Estoque</span>
+
+    <strong id="resumoEstoque">
+      0
+    </strong>
+
+    <p>Itens cadastrados</p>
+  </div>
+
+</section>
+
+<section class="charts">
+  <div class="chart-card">
+    <h3>Vendas</h3>
+
+    <canvas id="graficoVendas"></canvas>
+  </div>
+
+  <div class="chart-card">
+    <h3>Estoque</h3>
+
+    <canvas id="graficoEstoque"></canvas>
+  </div>
+</section>
+
+<section class="alerts">
+  <div class="alert-card">
+    <h3>Alertas inteligentes</h3>
+
+    <div id="listaAlertas"></div>
+  </div>
+</section>
 
         <!-- Área de produtos -->
         <section class="panel">
           <div class="filters">
             <input type="text" placeholder="Buscar produtos..." />
+
             <select>
               <option>Todas categorias</option>
               <option>Linguiças</option>
               <option>Salgados</option>
               <option>Defumados</option>
             </select>
-            <!-- FIX: botão abrirModal adicionado -->
-            <button class="btn-primary" id="abrirModal">+ Novo Produto</button>
+
             <button class="btn-light">Exportar</button>
           </div>
 
@@ -128,46 +181,77 @@
                 <th>Ações</th>
               </tr>
             </thead>
-            <!-- FIX: id adicionado, linhas hardcoded removidas -->
-            <tbody id="tabelaProdutos"></tbody>
+
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Linguiça Artesanal</strong>
+                  <small>Código: LA002</small>
+                </td>
+                <td>Linguiças</td>
+                <td>R$ 18,50</td>
+                <td>R$ 925,00</td>
+                <td class="green">R$ 28,00</td>
+                <td class="orange">25 kg</td>
+                <td>
+                  <button>Editar</button>
+                  <button>Excluir</button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <strong>Bacon Defumado</strong>
+                  <small>Código: BD003</small>
+                </td>
+                <td>Defumados</td>
+                <td>R$ 22,80</td>
+                <td>R$ 456,00</td>
+                <td class="green">R$ 35,00</td>
+                <td class="red">15 kg</td>
+                <td>
+                  <button>Editar</button>
+                  <button>Excluir</button>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </section>
       </main>
     </div>
+<!-- Modal -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h2>Novo Produto</h2>
 
-    <!-- Modal novo produto -->
-    <div class="modal" id="modal">
-      <div class="modal-content">
-        <h2>Novo Produto</h2>
-        <input type="text" id="nome" placeholder="Nome do produto" />
-        <input type="text" id="categoria" placeholder="Categoria" />
-        <input type="number" id="custo" placeholder="Custo unitário" />
-        <input type="number" id="venda" placeholder="Preço de venda" />
-        <input type="number" id="estoque" placeholder="Estoque" />
-        <div class="modal-buttons">
-          <button id="salvarProduto" class="btn-primary">Salvar</button>
-          <button id="fecharModal" class="btn-light">Cancelar</button>
-        </div>
-      </div>
+    <input type="text" id="nome" placeholder="Nome do produto" />
+
+    <input type="text" id="categoria" placeholder="Categoria" />
+
+    <input type="number" id="custo" placeholder="Custo unitário" />
+
+    <input type="number" id="venda" placeholder="Preço de venda" />
+
+    <input type="number" id="estoque" placeholder="Estoque" />
+
+    <div class="modal-buttons">
+      <button id="salvarProduto" class="btn-primary">
+        Salvar
+      </button>
+
+      <button id="fecharModal" class="btn-light">
+        Cancelar
+      </button>
     </div>
+  </div>
+</div>
 
-    <script src="./data/produtos.js"></script>
-    <script src="./data/vendas.js"></script>
-    <script src="./data/materiaPrima.js"></script>
-    <script src="./data/fabricacoes.js"></script>
-    <script src="./data/receitas.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="./script.js"></script>
-
-    <!-- FIX: dark mode inicializa o texto do botão corretamente -->
-    <script>
-      (function () {
-        const toggleDark = document.getElementById("toggleDark")
-        if (localStorage.getItem("tema") === "dark") {
-          document.body.classList.add("dark")
-          if (toggleDark) toggleDark.innerText = "☀️ Light mode"
-        }
-      })()
-    </script>
+  <script src="./data/produtos.js"></script>
+<script src="./data/vendas.js"></script>
+<script src="./data/materiaPrima.js"></script>
+<script src="./data/fabricacoes.js"></script>
+<script src="./data/receitas.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="./script.js"></script>
   </body>
 </html>

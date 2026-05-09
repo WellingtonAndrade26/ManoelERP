@@ -1265,7 +1265,7 @@ const salvarCliente = document.getElementById("salvarCliente")
 const tabelaClientes = document.getElementById("tabelaClientes")
 
 let clientesSalvos =
-  JSON.parse(localStorage.getItem("clientes")) || clientes
+  JSON.parse(localStorage.getItem("clientes")) || []
 
 function salvarClientesLocalStorage() {
   localStorage.setItem("clientes", JSON.stringify(clientesSalvos))

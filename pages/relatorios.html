@@ -2,8 +2,14 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
     <title>Relatórios | Linguiçaria</title>
+
     <link rel="stylesheet" href="../style.css" />
   </head>
 
@@ -12,11 +18,14 @@
 
       <!-- MENU -->
       <aside class="sidebar">
+
         <div>
+
           <div class="brand">
             <div class="logo">
-              <img src="../assets/logo.png" alt="Logo Artesanais do Manoel">
-            </div>
+  <img src="../assets/logo.png" alt="Logo Artesanais do Manoel">
+</div>
+
             <div>
               <h1>Linguiçaria</h1>
               <p>Sistema de gerenciamento</p>
@@ -24,7 +33,7 @@
           </div>
 
           <nav class="menu">
-            <a href="../index.html"><button class="menu-btn">Resumo</button></a>
+<a href="../index.html"><button class="menu-btn">Resumo</button></a>
             <a href="./materia-prima.html"><button class="menu-btn">Matéria-prima</button></a>
             <a href="./produtos.html"><button class="menu-btn">Produtos</button></a>
             <a href="./fabricacao.html"><button class="menu-btn">Fabricação</button></a>
@@ -38,102 +47,122 @@
 
         <div class="user">
           <div class="avatar">M</div>
+
           <div>
             <strong>Manoel</strong>
             <p>Administrador</p>
           </div>
           <button class="btn-light" id="sairSistema"> Sair </button>
         </div>
+
       </aside>
 
       <!-- CONTEÚDO -->
       <main class="content">
 
         <header class="top">
+
           <div>
             <h2>Relatórios</h2>
-            <p>Analise vendas, lucro e desempenho.</p>
+
+            <p>
+              Analise vendas, lucro e desempenho.
+            </p>
           </div>
 
-          <div style="display:flex;gap:8px;align-items:center;">
-            <!-- FIX: botão dark mode adicionado -->
-            <button class="btn-light" id="toggleDark">🌙 Dark mode</button>
-            <button class="btn-primary" id="gerarRelatorio">Gerar relatório</button>
-          </div>
+          <button class="btn-primary" id="gerarRelatorio">
+  Gerar relatório
+</button>
+
         </header>
 
         <!-- CARDS -->
         <section class="cards">
+
           <div class="card">
             <span>Faturamento mensal</span>
+
             <strong id="relatorioFaturamento">R$ 0</strong>
+
             <p>Total do mês</p>
           </div>
+
           <div class="card">
             <span>Lucro mensal</span>
+
             <strong id="relatorioLucro">R$ 0</strong>
+
             <p>Margem atual</p>
           </div>
+
           <div class="card">
             <span>Pedidos realizados</span>
+
             <strong id="relatorioProdutos">0</strong>
             <p>Total de vendas</p>
           </div>
+
           <div class="card">
             <span>Produto mais vendido</span>
-            <strong id="relatorioMaisVendido">Nenhum</strong>
+
+            <strong id="relatorioMaisVendido">
+  Nenhum
+</strong>
             <p>Produto destaque</p>
           </div>
+
         </section>
 
         <!-- TABELA -->
         <section class="panel">
+
           <div class="filters">
-            <input type="text" placeholder="Buscar relatório..." />
+
+            <input
+              type="text"
+              placeholder="Buscar relatório..."
+            />
+
             <select>
               <option>Últimos 30 dias</option>
               <option>Últimos 7 dias</option>
               <option>Este mês</option>
             </select>
-            <button class="btn-light" id="imprimirRelatorio">Exportar / Imprimir</button>
+
+            <button class="btn-light" id="imprimirRelatorio">
+  Exportar / Imprimir
+</button>
+
           </div>
 
           <table>
+
             <thead>
               <tr>
-                <!-- FIX: colunas alinhadas com o que carregarRelatorios() gera -->
-                <th>Cliente</th>
-                <th>Produto</th>
-                <th>Quantidade</th>
-                <th>Pagamento</th>
-                <th>Total</th>
+                <th>Relatório</th>
+                <th>Período</th>
+                <th>Faturamento</th>
+                <th>Lucro</th>
                 <th>Status</th>
+                <th>Ações</th>
               </tr>
             </thead>
-            <!-- FIX: tbody único, sem o </tbody> duplicado que havia antes -->
+
             <tbody id="tabelaRelatorios"></tbody>
+
           </table>
+
         </section>
 
       </main>
     </div>
 
     <script src="../data/produtos.js"></script>
-    <script src="../data/vendas.js"></script>
-    <script src="../data/materiaPrima.js"></script>
-    <script src="../data/fabricacoes.js"></script>
-    <script src="../data/receitas.js"></script>
-    <script src="../script.js"></script>
-
-    <!-- FIX: dark mode inicializa o texto do botão corretamente -->
-    <script>
-      (function () {
-        const toggleDark = document.getElementById("toggleDark")
-        if (localStorage.getItem("tema") === "dark") {
-          document.body.classList.add("dark")
-          if (toggleDark) toggleDark.innerText = "☀️ Light mode"
-        }
-      })()
-    </script>
+<script src="../data/vendas.js"></script>
+<script src="../data/materiaPrima.js"></script>
+<script src="../data/fabricacoes.js"></script>
+<script src="../data/receitas.js"></script>
+<script src="../data/clientes.js"></script>
+<script src="../script.js"></script>
   </body>
 </html>
