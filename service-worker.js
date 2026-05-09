@@ -1,4 +1,4 @@
-const CACHE_NAME = "manoelerp-v5"
+const CACHE_NAME = "manoelerp-v6"
 
 const FILES_TO_CACHE = [
   "./",
