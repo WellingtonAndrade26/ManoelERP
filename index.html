@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+/>
+
     <title>Artesanais do Manoel</title>
 
     <link rel="stylesheet" href="./style.css" />
@@ -18,6 +24,17 @@
   </head>
 
   <body>
+
+<div class="mobile-header">
+  <button id="abrirMenuMobile" class="mobile-menu-btn">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <h2 class="mobile-title">Resumo</h2>
+</div>
+
+<div id="overlayMenu" class="overlay-menu"></div>
+
     <div class="app">
       <!-- Menu lateral -->
       <aside class="sidebar">
@@ -32,45 +49,76 @@
             </div>
           </div>
 
-          <nav class="menu">
+          <nav class="menu" id="sidebarMenu">
   <a href="./index.html">
-    <button class="menu-btn active">Resumo</button>
+    <button class="menu-btn active">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Resumo</span>
+    </button>
   </a>
+
   <a href="./pages/materia-prima.html">
-  <button class="menu-btn">Matéria-prima</button>
-</a>
+    <button class="menu-btn">
+      <i class="fa-solid fa-drumstick-bite"></i>
+      <span>Matéria-prima</span>
+    </button>
+  </a>
 
   <a href="./pages/produtos.html">
-    <button class="menu-btn">Produtos</button>
+    <button class="menu-btn">
+      <i class="fa-solid fa-box-open"></i>
+      <span>Produtos</span>
+    </button>
   </a>
 
   <a href="./pages/fabricacao.html">
-  <button class="menu-btn">Fabricação</button>
-</a>
-<a href="./pages/receitas.html">
-  <button class="menu-btn">Receitas</button>
-</a>
+    <button class="menu-btn">
+      <i class="fa-solid fa-industry"></i>
+      <span>Fabricação</span>
+    </button>
+  </a>
+
+  <a href="./pages/receitas.html">
+    <button class="menu-btn">
+      <i class="fa-solid fa-utensils"></i>
+      <span>Receitas</span>
+    </button>
+  </a>
 
   <a href="./pages/clientes.html">
-    <button class="menu-btn">Clientes</button>
+    <button class="menu-btn">
+      <i class="fa-solid fa-users"></i>
+      <span>Clientes</span>
+    </button>
   </a>
 
   <a href="./pages/vendas.html">
-    <button class="menu-btn">Vendas</button>
+    <button class="menu-btn">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span>Vendas</span>
+    </button>
   </a>
 
   <a href="./pages/estoque.html">
-    <button class="menu-btn">Estoque</button>
+    <button class="menu-btn">
+      <i class="fa-solid fa-warehouse"></i>
+      <span>Estoque</span>
+    </button>
   </a>
 
   <a href="./pages/relatorios.html">
-    <button class="menu-btn">Relatórios</button>
+    <button class="menu-btn">
+      <i class="fa-solid fa-file-lines"></i>
+      <span>Relatórios</span>
+    </button>
   </a>
 
   <a href="./pages/financeiro.html">
-    <button class="menu-btn">Financeiro</button>
+    <button class="menu-btn">
+      <i class="fa-solid fa-sack-dollar"></i>
+      <span>Financeiro</span>
+    </button>
   </a>
-
 </nav>
         </div>
 

@@ -237,6 +237,11 @@ function excluirVenda(id) {
   }
 
   vendasSalvas = vendasSalvas.filter((venda) => venda.id !== id)
+  financeiroSalvo = financeiroSalvo.filter(
+  (movimentacao) => movimentacao.vendaId !== id
+)
+
+salvarFinanceiroLocalStorage()
 
   salvarVendasLocalStorage()
   salvarLocalStorage()
@@ -293,7 +298,9 @@ if (salvarVenda) {
     }
 
     vendasSalvas.push(novaVenda)
-    produto.estoque -= quantidade
+produto.estoque -= quantidade
+
+registrarVendaNoFinanceiro(novaVenda)
 
     salvarVendasLocalStorage()
     salvarLocalStorage()
@@ -408,9 +415,17 @@ function atualizarDashboardMateria() {
 function excluirMateria(id) {
   materiasSalvas = materiasSalvas.filter((materia) => materia.id !== id)
 
-  salvarMateriasLocalStorage()
-  carregarMaterias()
-  atualizarDashboardMateria()
+financeiroSalvo = financeiroSalvo.filter(
+  (movimentacao) => movimentacao.materiaId !== id
+)
+
+salvarMateriasLocalStorage()
+salvarFinanceiroLocalStorage()
+
+carregarMaterias()
+atualizarDashboardMateria()
+carregarFinanceiro()
+atualizarDashboardFinanceiro()
 }
 
 if (abrirModalMateria) {
@@ -449,9 +464,25 @@ if (salvarMateria) {
 
     materiasSalvas.push(novaMateria)
 
-    salvarMateriasLocalStorage()
-    carregarMaterias()
-    atualizarDashboardMateria()
+const novaMovimentacao = {
+  id: Date.now() + 20,
+  materiaId: novaMateria.id,
+  descricao: `Compra de matéria-prima: ${novaMateria.nome}`,
+  tipo: "Saída",
+  categoria: "Matéria-prima",
+  valor: novaMateria.valorPago,
+  data: new Date().toLocaleDateString("pt-BR"),
+}
+
+financeiroSalvo.push(novaMovimentacao)
+
+salvarMateriasLocalStorage()
+salvarFinanceiroLocalStorage()
+
+carregarMaterias()
+atualizarDashboardMateria()
+carregarFinanceiro()
+atualizarDashboardFinanceiro()
 
     modalMateria.classList.remove("active")
 
@@ -1303,9 +1334,29 @@ const financeiroBase =
 
 let financeiroSalvo =
   JSON.parse(localStorage.getItem("financeiro")) || financeiroBase
-  
+
 function salvarFinanceiroLocalStorage() {
   localStorage.setItem("financeiro", JSON.stringify(financeiroSalvo))
+}
+
+function registrarVendaNoFinanceiro(venda) {
+  if (venda.pagamento === "Fiado") return
+
+  const novaMovimentacao = {
+    id: Date.now() + 10,
+    vendaId: venda.id,
+    descricao: `Venda para ${venda.cliente}`,
+    tipo: "Entrada",
+    categoria: `Venda - ${venda.pagamento}`,
+    valor: venda.total,
+    data: new Date().toLocaleDateString("pt-BR"),
+  }
+
+  financeiroSalvo.push(novaMovimentacao)
+
+  salvarFinanceiroLocalStorage()
+  carregarFinanceiro()
+  atualizarDashboardFinanceiro()
 }
 
 function carregarFinanceiro() {
@@ -1473,3 +1524,19 @@ if ("serviceWorker" in navigator) {
 window.addEventListener("load", () => {
   document.body.classList.add("loaded")
 })
+
+const abrirMenuMobile = document.getElementById("abrirMenuMobile")
+const overlayMenu = document.getElementById("overlayMenu")
+const sidebar = document.querySelector(".sidebar")
+
+if (abrirMenuMobile && sidebar && overlayMenu) {
+  abrirMenuMobile.addEventListener("click", () => {
+    sidebar.classList.add("active")
+    overlayMenu.classList.add("active")
+  })
+
+  overlayMenu.addEventListener("click", () => {
+    sidebar.classList.remove("active")
+    overlayMenu.classList.remove("active")
+  })
+}

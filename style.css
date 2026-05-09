@@ -631,3 +631,171 @@ td button {
 
   font-size: 13px;
 }
+
+/* =========================
+   MOBILE HEADER
+========================= */
+
+.mobile-header {
+  display: none;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: #0f172a;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.mobile-header .mobile-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.mobile-menu-btn {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* =========================
+   OVERLAY
+========================= */
+
+.overlay-menu {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.25s;
+  z-index: 1050;
+}
+
+.overlay-menu.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =========================
+   MENU COM ÍCONES
+========================= */
+
+.menu-btn {
+  width: 100%;
+  min-height: 48px;
+  border: none;
+  background: transparent;
+  padding: 0 14px;
+  border-radius: 12px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-btn i {
+  width: 18px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.menu-btn span {
+  flex: 1;
+}
+
+.menu-btn.active {
+  background: #e8e1d6;
+}
+
+body.dark .menu-btn.active,
+html.dark .menu-btn.active {
+  background: #374151;
+}
+
+/* =========================
+   MOBILE SIDEBAR
+========================= */
+
+@media (max-width: 900px) {
+  .mobile-header {
+    display: flex;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -290px;
+    width: 270px;
+    height: 100vh;
+    z-index: 1200;
+    transition: left 0.25s ease;
+    overflow-y: auto;
+  }
+
+  .sidebar.active {
+    left: 0;
+  }
+
+  .content {
+    padding: 18px;
+  }
+
+  .top {
+    display: none;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filters input,
+  .filters select,
+  .filters button {
+    width: 100%;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  .panel {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: -290px;
+    width: 270px;
+    height: 100vh;
+    z-index: 1200;
+    transition: left 0.25s ease;
+    overflow-y: auto;
+  }
+
+  .sidebar.active {
+    left: 0;
+  }
+}
