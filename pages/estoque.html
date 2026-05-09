@@ -13,8 +13,8 @@
         <div>
           <div class="brand">
             <div class="logo">
-  <img src="../assets/logo.png" alt="Logo Artesanais do Manoel">
-</div>
+              <img src="../assets/logo.png" alt="Logo Artesanais do Manoel">
+            </div>
             <div>
               <h1>Linguiçaria</h1>
               <p>Sistema de gerenciamento</p>
@@ -51,74 +51,46 @@
             <p>Controle entradas, saídas e alertas de produtos.</p>
           </div>
 
-          <button class="btn-primary" id="abrirModalEntrada">
-  + Entrada no estoque
-</button>
-<div class="modal" id="modalSaida">
-  <div class="modal-content">
-    <h2>Saída do estoque</h2>
-
-    <select id="produtoSaida">
-      <option value="">Selecione o produto</option>
-    </select>
-
-    <input
-      type="number"
-      id="quantidadeSaida"
-      placeholder="Quantidade"
-    />
-
-    <div class="modal-buttons">
-      <button id="salvarSaida" class="btn-primary">
-        Salvar saída
-      </button>
-
-      <button id="fecharModalSaida" class="btn-light">
-        Cancelar
-      </button>
-    </div>
-  </div>
-</div>
-
+          <div style="display:flex;gap:8px;align-items:center;">
+            <!-- FIX: dark mode adicionado -->
+            <button class="btn-light" id="toggleDark">🌙 Dark mode</button>
+            <button class="btn-primary" id="abrirModalEntrada">+ Entrada no estoque</button>
+          </div>
         </header>
 
+        <!-- FIX: cards hardcoded removidos — valores dinâmicos virão do JS se quiser implementar -->
         <section class="cards">
           <div class="card">
-            <span>Itens em estoque</span>
-            <strong>142</strong>
-            <p>Total disponível</p>
+            <span>Total de produtos</span>
+            <strong id="totalProdutos">0</strong>
+            <p>Cadastrados</p>
           </div>
-
+          <div class="card">
+            <span>Valor em estoque</span>
+            <strong id="valorEstoque">R$ 0</strong>
+            <p>Custo total</p>
+          </div>
           <div class="card">
             <span>Baixo estoque</span>
-            <strong class="red">5</strong>
+            <strong id="baixoEstoque" class="red">0</strong>
             <p>Precisam de reposição</p>
           </div>
-
           <div class="card">
-            <span>Entradas hoje</span>
-            <strong class="green">38</strong>
-            <p>Novos itens</p>
-          </div>
-
-          <div class="card">
-            <span>Saídas hoje</span>
-            <strong class="orange">21</strong>
-            <p>Produtos vendidos</p>
+            <span>Lucro estimado</span>
+            <strong id="lucroEstimado">R$ 0</strong>
+            <p>Se vender tudo</p>
           </div>
         </section>
 
         <section class="panel">
           <div class="filters">
             <input type="text" placeholder="Buscar item..." />
-
             <select>
               <option>Todos status</option>
               <option>Disponível</option>
               <option>Baixo estoque</option>
               <option>Esgotado</option>
             </select>
-
             <button class="btn-light">Exportar</button>
           </div>
 
@@ -133,43 +105,60 @@
                 <th>Ações</th>
               </tr>
             </thead>
-
+            <!-- FIX: tbody limpo, sem lixo de HTML solto após o fechamento -->
             <tbody id="tabelaEstoque"></tbody>
-            </tbody>
           </table>
         </section>
       </main>
     </div>
-<div class="modal" id="modalEntrada">
-  <div class="modal-content">
-    <h2>Entrada no estoque</h2>
 
-    <select id="produtoEntrada">
-      <option value="">Selecione o produto</option>
-    </select>
-
-    <input
-      type="number"
-      id="quantidadeEntrada"
-      placeholder="Quantidade"
-    />
-
-    <div class="modal-buttons">
-      <button id="salvarEntrada" class="btn-primary">
-        Salvar entrada
-      </button>
-
-      <button id="fecharModalEntrada" class="btn-light">
-        Cancelar
-      </button>
+    <!-- Modal entrada -->
+    <div class="modal" id="modalEntrada">
+      <div class="modal-content">
+        <h2>Entrada no estoque</h2>
+        <select id="produtoEntrada">
+          <option value="">Selecione o produto</option>
+        </select>
+        <input type="number" id="quantidadeEntrada" placeholder="Quantidade" />
+        <div class="modal-buttons">
+          <button id="salvarEntrada" class="btn-primary">Salvar entrada</button>
+          <button id="fecharModalEntrada" class="btn-light">Cancelar</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+
+    <!-- Modal saída -->
+    <!-- FIX: modal saída movido para fora do header (estava dentro do <header>) -->
+    <div class="modal" id="modalSaida">
+      <div class="modal-content">
+        <h2>Saída do estoque</h2>
+        <select id="produtoSaida">
+          <option value="">Selecione o produto</option>
+        </select>
+        <input type="number" id="quantidadeSaida" placeholder="Quantidade" />
+        <div class="modal-buttons">
+          <button id="salvarSaida" class="btn-primary">Salvar saída</button>
+          <button id="fecharModalSaida" class="btn-light">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
     <script src="../data/produtos.js"></script>
-<script src="../data/vendas.js"></script>
-<script src="../data/materiaPrima.js"></script>
-<script src="../data/fabricacoes.js"></script>
-<script src="../data/receitas.js"></script>
-<script src="../script.js"></script>
+    <script src="../data/vendas.js"></script>
+    <script src="../data/materiaPrima.js"></script>
+    <script src="../data/fabricacoes.js"></script>
+    <script src="../data/receitas.js"></script>
+    <script src="../script.js"></script>
+
+    <!-- FIX: dark mode inicializa o texto do botão corretamente -->
+    <script>
+      (function () {
+        const toggleDark = document.getElementById("toggleDark")
+        if (localStorage.getItem("tema") === "dark") {
+          document.body.classList.add("dark")
+          if (toggleDark) toggleDark.innerText = "☀️ Light mode"
+        }
+      })()
+    </script>
   </body>
 </html>
