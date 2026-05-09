@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Receitas | Artesanais do Manoel</title>
     <link rel="stylesheet" href="../style.css" />
+
+<script>
+  if (localStorage.getItem("tema") === "dark") {
+    document.documentElement.classList.add("dark")
+  }
+</script>
+
   </head>
 
   <body>
@@ -25,13 +32,14 @@
           <nav class="menu">
             <a href="../index.html"><button class="menu-btn">Resumo</button></a>
             <a href="./materia-prima.html"><button class="menu-btn">Matéria-prima</button></a>
-            <a href="./receitas.html"><button class="menu-btn active">Receitas</button></a>
-            <a href="./fabricacao.html"><button class="menu-btn">Fabricação</button></a>
             <a href="./produtos.html"><button class="menu-btn">Produtos</button></a>
+            <a href="./fabricacao.html"><button class="menu-btn">Fabricação</button></a>
+            <a href="./receitas.html"><button class="menu-btn active">Receitas</button></a>
             <a href="./clientes.html"><button class="menu-btn">Clientes</button></a>
             <a href="./vendas.html"><button class="menu-btn">Vendas</button></a>
             <a href="./estoque.html"><button class="menu-btn">Estoque</button></a>
             <a href="./relatorios.html"><button class="menu-btn">Relatórios</button></a>
+            <a href="./financeiro.html"><button class="menu-btn">Financeiro</button></a>
           </nav>
         </div>
 
@@ -136,7 +144,7 @@
       </div>
     </div>
 
-    <<script src="../data/produtos.js"></script>
+<script src="../data/produtos.js"></script>
 <script src="../data/vendas.js"></script>
 <script src="../data/materiaPrima.js"></script>
 <script src="../data/fabricacoes.js"></script>

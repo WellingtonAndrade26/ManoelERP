@@ -3,8 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Matéria-prima | Linguiçaria</title>
+    <title>Matéria-prima | Artesanais do Manoel</title>
     <link rel="stylesheet" href="../style.css" />
+
+<script>
+  if (localStorage.getItem("tema") === "dark") {
+    document.documentElement.classList.add("dark")
+  }
+</script>
+
   </head>
 
   <body>
@@ -16,7 +23,7 @@
   <img src="../assets/logo.png" alt="Logo Artesanais do Manoel">
 </div>
             <div>
-              <h1>Linguiçaria</h1>
+              <h1>Artesanais do Manoel</h1>
               <p>Sistema de gerenciamento</p>
             </div>
           </div>
@@ -31,6 +38,7 @@
             <a href="./vendas.html"><button class="menu-btn">Vendas</button></a>
             <a href="./estoque.html"><button class="menu-btn">Estoque</button></a>
             <a href="./relatorios.html"><button class="menu-btn">Relatórios</button></a>
+            <a href="./financeiro.html"><button class="menu-btn">Financeiro</button></a>
           </nav>
         </div>
 
@@ -111,48 +119,6 @@
             </thead>
 
             <tbody id="tabelaMateria"></tbody>
-              <tr>
-                <td>Carne suína</td>
-                <td>20</td>
-                <td>kg</td>
-                <td>R$ 320,00</td>
-                <td>R$ 16,00</td>
-                <td class="green">20 kg</td>
-                <td class="green">Disponível</td>
-                <td>
-                  <button>Editar</button>
-                  <button>Excluir</button>
-                </td>
-              </tr>
-
-              <tr>
-                <td>Toucinho</td>
-                <td>5</td>
-                <td>kg</td>
-                <td>R$ 65,00</td>
-                <td>R$ 13,00</td>
-                <td class="orange">5 kg</td>
-                <td class="orange">Atenção</td>
-                <td>
-                  <button>Editar</button>
-                  <button>Excluir</button>
-                </td>
-              </tr>
-
-              <tr>
-                <td>Tripa</td>
-                <td>1</td>
-                <td>pacote</td>
-                <td>R$ 35,00</td>
-                <td>R$ 35,00</td>
-                <td class="red">1 pacote</td>
-                <td class="red">Baixo</td>
-                <td>
-                  <button>Editar</button>
-                  <button>Excluir</button>
-                </td>
-              </tr>
-            </tbody>
           </table>
         </section>
       </main>

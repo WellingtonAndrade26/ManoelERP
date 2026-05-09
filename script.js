@@ -1259,6 +1259,180 @@ if (imprimirRelatorio) {
   })
 }
 
+const toggleDark = document.getElementById("toggleDark")
+
+function aplicarTextoDarkMode() {
+  if (!toggleDark) return
+
+  if (localStorage.getItem("tema") === "dark") {
+    toggleDark.innerText = "☀️ Light mode"
+  } else {
+    toggleDark.innerText = "🌙 Dark mode"
+  }
+}
+
+if (localStorage.getItem("tema") === "dark") {
+  document.documentElement.classList.add("dark")
+  document.body.classList.add("dark")
+}
+
+aplicarTextoDarkMode()
+
+if (toggleDark) {
+  toggleDark.addEventListener("click", () => {
+    const darkAtivo =
+      !document.documentElement.classList.contains("dark")
+
+    document.documentElement.classList.toggle("dark", darkAtivo)
+    document.body.classList.toggle("dark", darkAtivo)
+
+    localStorage.setItem("tema", darkAtivo ? "dark" : "light")
+
+    aplicarTextoDarkMode()
+  })
+}
+
+const modalFinanceiro = document.getElementById("modalFinanceiro")
+const abrirModalFinanceiro = document.getElementById("abrirModalFinanceiro")
+const fecharModalFinanceiro = document.getElementById("fecharModalFinanceiro")
+const salvarFinanceiro = document.getElementById("salvarFinanceiro")
+const tabelaFinanceiro = document.getElementById("tabelaFinanceiro")
+
+const financeiroBase =
+  typeof financeiro !== "undefined" ? financeiro : []
+
+let financeiroSalvo =
+  JSON.parse(localStorage.getItem("financeiro")) || financeiroBase
+  
+function salvarFinanceiroLocalStorage() {
+  localStorage.setItem("financeiro", JSON.stringify(financeiroSalvo))
+}
+
+function carregarFinanceiro() {
+  if (!tabelaFinanceiro) return
+
+  tabelaFinanceiro.innerHTML = ""
+
+  financeiroSalvo.forEach((movimentacao) => {
+    tabelaFinanceiro.innerHTML += `
+      <tr>
+        <td>${movimentacao.descricao}</td>
+
+        <td class="${movimentacao.tipo === "Entrada" ? "green" : "red"}">
+          ${movimentacao.tipo}
+        </td>
+
+        <td>${movimentacao.categoria}</td>
+
+        <td class="${movimentacao.tipo === "Entrada" ? "green" : "red"}">
+          R$ ${movimentacao.valor.toFixed(2)}
+        </td>
+
+        <td>${movimentacao.data}</td>
+
+        <td>
+          <button onclick="excluirFinanceiro(${movimentacao.id})">
+            Excluir
+          </button>
+        </td>
+      </tr>
+    `
+  })
+}
+
+function atualizarDashboardFinanceiro() {
+  const entradasEl = document.getElementById("financeiroEntradas")
+  const saidasEl = document.getElementById("financeiroSaidas")
+  const saldoEl = document.getElementById("financeiroSaldo")
+  const totalEl = document.getElementById("financeiroTotal")
+
+  if (!entradasEl) return
+
+  let entradas = 0
+  let saidas = 0
+
+  financeiroSalvo.forEach((movimentacao) => {
+    if (movimentacao.tipo === "Entrada") {
+      entradas += movimentacao.valor
+    } else {
+      saidas += movimentacao.valor
+    }
+  })
+
+  const saldo = entradas - saidas
+
+  entradasEl.innerText = `R$ ${entradas.toFixed(2)}`
+  saidasEl.innerText = `R$ ${saidas.toFixed(2)}`
+  saldoEl.innerText = `R$ ${saldo.toFixed(2)}`
+  totalEl.innerText = financeiroSalvo.length
+
+  if (saldo < 0) {
+    saldoEl.classList.add("red")
+    saldoEl.classList.remove("green")
+  } else {
+    saldoEl.classList.add("green")
+    saldoEl.classList.remove("red")
+  }
+}
+
+function excluirFinanceiro(id) {
+  financeiroSalvo = financeiroSalvo.filter(
+    (movimentacao) => movimentacao.id !== id
+  )
+
+  salvarFinanceiroLocalStorage()
+  carregarFinanceiro()
+  atualizarDashboardFinanceiro()
+}
+
+if (abrirModalFinanceiro) {
+  abrirModalFinanceiro.addEventListener("click", () => {
+    modalFinanceiro.classList.add("active")
+  })
+}
+
+if (fecharModalFinanceiro) {
+  fecharModalFinanceiro.addEventListener("click", () => {
+    modalFinanceiro.classList.remove("active")
+  })
+}
+
+if (salvarFinanceiro) {
+  salvarFinanceiro.addEventListener("click", () => {
+    const descricao = document.getElementById("financeiroDescricao").value
+    const tipo = document.getElementById("financeiroTipo").value
+    const categoria = document.getElementById("financeiroCategoria").value
+    const valor = Number(document.getElementById("financeiroValor").value)
+
+    if (!descricao || !tipo || !categoria || !valor) {
+      alert("Preencha todos os campos")
+      return
+    }
+
+    const novaMovimentacao = {
+      id: Date.now(),
+      descricao,
+      tipo,
+      categoria,
+      valor,
+      data: new Date().toLocaleDateString("pt-BR"),
+    }
+
+    financeiroSalvo.push(novaMovimentacao)
+
+    salvarFinanceiroLocalStorage()
+    carregarFinanceiro()
+    atualizarDashboardFinanceiro()
+
+    modalFinanceiro.classList.remove("active")
+
+    document.getElementById("financeiroDescricao").value = ""
+    document.getElementById("financeiroTipo").value = ""
+    document.getElementById("financeiroCategoria").value = ""
+    document.getElementById("financeiroValor").value = ""
+  })
+}
+
 // Inicialização
 carregarClientes()
 carregarProdutosSaida()
@@ -1282,37 +1456,10 @@ carregarAlertasDashboard()
 carregarEstoque()
 atualizarDashboardClientes()
 carregarRelatorios()
+carregarFinanceiro()
+atualizarDashboardFinanceiro()
 
-// Dark mode — apenas no index
-const noIndex =
-  window.location.pathname.endsWith("index.html") ||
-  window.location.pathname === "/" ||
-  window.location.pathname.endsWith("/ManoelERP/")
 
-if (noIndex) {
-  const toggleDark = document.getElementById("toggleDark")
-
-  if (localStorage.getItem("tema") === "dark") {
-    document.body.classList.add("dark")
-    if (toggleDark) toggleDark.innerText = "☀️ Light mode"
-  } else {
-    if (toggleDark) toggleDark.innerText = "🌙 Dark mode"
-  }
-
-  if (toggleDark) {
-    toggleDark.addEventListener("click", () => {
-      document.body.classList.toggle("dark")
-
-      if (document.body.classList.contains("dark")) {
-        localStorage.setItem("tema", "dark")
-        toggleDark.innerText = "☀️ Light mode"
-      } else {
-        localStorage.setItem("tema", "light")
-        toggleDark.innerText = "🌙 Dark mode"
-      }
-    })
-  }
-}
 
 // Service Worker
 if ("serviceWorker" in navigator) {
@@ -1322,3 +1469,7 @@ if ("serviceWorker" in navigator) {
 
   navigator.serviceWorker.register(caminhoSW)
 }
+
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded")
+})

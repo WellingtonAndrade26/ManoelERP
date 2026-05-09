@@ -8,9 +8,16 @@
       content="width=device-width, initial-scale=1.0"
     />
 
-    <title>Relatórios | Linguiçaria</title>
+    <title>Relatórios | Artesanais do Manoel</title>
 
     <link rel="stylesheet" href="../style.css" />
+
+<script>
+  if (localStorage.getItem("tema") === "dark") {
+    document.documentElement.classList.add("dark")
+  }
+</script>
+
   </head>
 
   <body>
@@ -27,7 +34,7 @@
 </div>
 
             <div>
-              <h1>Linguiçaria</h1>
+              <h1>Artesanais do Manoel</h1>
               <p>Sistema de gerenciamento</p>
             </div>
           </div>
@@ -42,6 +49,7 @@
             <a href="./vendas.html"><button class="menu-btn">Vendas</button></a>
             <a href="./estoque.html"><button class="menu-btn">Estoque</button></a>
             <a href="./relatorios.html"><button class="menu-btn active">Relatórios</button></a>
+            <a href="./financeiro.html"><button class="menu-btn">Financeiro</button></a>
           </nav>
         </div>
 

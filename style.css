@@ -5,9 +5,102 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+html {
+  background: #f5f3ee;
+}
+
+html.dark,
+html.dark body,
+body.dark {
+  background: #111827;
+  color: #f9fafb;
+}
+
+html.dark .sidebar,
+html.dark .card,
+html.dark .panel,
+html.dark .chart-card,
+html.dark .alert-card,
+html.dark .modal-content,
+body.dark .sidebar,
+body.dark .card,
+body.dark .panel,
+body.dark .chart-card,
+body.dark .alert-card,
+body.dark .modal-content {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+html.dark .brand,
+html.dark .user,
+html.dark th,
+html.dark td,
+body.dark .brand,
+body.dark .user,
+body.dark th,
+body.dark td {
+  border-color: #374151;
+}
+
+html.dark th,
+html.dark .filters,
+html.dark input,
+html.dark select,
+html.dark .btn-light,
+body.dark th,
+body.dark .filters,
+body.dark input,
+body.dark select,
+body.dark .btn-light {
+  background: #111827;
+  color: #f9fafb;
+  border-color: #374151;
+}
+
+html.dark .menu-btn,
+body.dark .menu-btn {
+  color: #f9fafb;
+}
+
+html.dark .menu-btn.active,
+html.dark .menu-btn:hover,
+body.dark .menu-btn.active,
+body.dark .menu-btn:hover {
+  background: #374151;
+}
+
+html.dark p,
+html.dark span,
+html.dark small,
+body.dark p,
+body.dark span,
+body.dark small {
+  color: #d1d5db;
+}
+
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark strong,
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark strong {
+  color: #f9fafb;
+}
+
 body {
   background: #f5f3ee;
   color: #1f1f1f;
+}
+
+body {
+  opacity: 1;
+}
+
+body.loaded {
+  opacity: 1;
 }
 
 .app {
@@ -460,59 +553,7 @@ td button {
   color: #1f7a3a;
 }
 
-body.dark {
-  background: #111827;
-  color: #f9fafb;
-}
 
-body.dark .sidebar,
-body.dark .card,
-body.dark .panel,
-body.dark .chart-card,
-body.dark .alert-card,
-body.dark .modal-content {
-  background: #1f2937;
-  border-color: #374151;
-}
-
-body.dark .brand,
-body.dark .user,
-body.dark th,
-body.dark td {
-  border-color: #374151;
-}
-
-body.dark th,
-body.dark .filters,
-body.dark input,
-body.dark select,
-body.dark .btn-light {
-  background: #111827;
-  color: #faf9fb;
-  border-color: #374151;
-}
-
-body.dark .menu-btn {
-  color: #f9fafb;
-}
-
-body.dark .menu-btn.active,
-body.dark .menu-btn:hover {
-  background: #374151;
-}
-
-body.dark p,
-body.dark span,
-body.dark small {
-  color: #d1d5db;
-}
-
-body.dark h1,
-body.dark h2,
-body.dark h3,
-body.dark strong {
-  color: #f9fafb;
-}
 
 .login-page {
   background: #f5f1ea;

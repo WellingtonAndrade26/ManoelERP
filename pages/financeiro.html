@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Produtos | Artesanais do Manoel</title>
+    <title>Financeiro | Artesanais do Manoel</title>
+
     <link rel="stylesheet" href="../style.css" />
 
     <script>
-  if (localStorage.getItem("tema") === "dark") {
-    document.documentElement.classList.add("dark")
-  }
-</script>
-
+      if (localStorage.getItem("tema") === "dark") {
+        document.documentElement.classList.add("dark")
+      }
+    </script>
   </head>
 
   <body>
@@ -20,8 +20,9 @@
         <div>
           <div class="brand">
             <div class="logo">
-  <img src="../assets/logo.png" alt="Logo Artesanais do Manoel">
-</div>
+              <img src="../assets/logo.png" alt="Logo Artesanais do Manoel" />
+            </div>
+
             <div>
               <h1>Artesanais do Manoel</h1>
               <p>Sistema de gerenciamento</p>
@@ -31,106 +32,125 @@
           <nav class="menu">
             <a href="../index.html"><button class="menu-btn">Resumo</button></a>
             <a href="./materia-prima.html"><button class="menu-btn">Matéria-prima</button></a>
-            <a href="./produtos.html"><button class="menu-btn active">Produtos</button></a>
+            <a href="./produtos.html"><button class="menu-btn">Produtos</button></a>
             <a href="./fabricacao.html"><button class="menu-btn">Fabricação</button></a>
             <a href="./receitas.html"><button class="menu-btn">Receitas</button></a>
             <a href="./clientes.html"><button class="menu-btn">Clientes</button></a>
             <a href="./vendas.html"><button class="menu-btn">Vendas</button></a>
             <a href="./estoque.html"><button class="menu-btn">Estoque</button></a>
             <a href="./relatorios.html"><button class="menu-btn">Relatórios</button></a>
-            <a href="./financeiro.html"><button class="menu-btn">Financeiro</button></a>
+            <a href="./financeiro.html"><button class="menu-btn active">Financeiro</button></a>
           </nav>
         </div>
 
         <div class="user">
           <div class="avatar">M</div>
+
           <div>
             <strong>Manoel</strong>
             <p>Administrador</p>
           </div>
-          <button class="btn-light" id="sairSistema"> Sair </button>
+
+          <button class="btn-light" id="sairSistema">
+            Sair
+          </button>
         </div>
       </aside>
 
       <main class="content">
         <header class="top">
           <div>
-            <h2>Produtos</h2>
-            <p>Gerencie produtos, preços e custos.</p>
+            <h2>Financeiro</h2>
+            <p>Controle entradas, saídas, saldo e movimentações do caixa.</p>
           </div>
 
-          <button class="btn-primary" id="abrirModal">+ Novo produto</button>
+          <button class="btn-primary" id="abrirModalFinanceiro">
+            + Nova movimentação
+          </button>
         </header>
 
         <section class="cards">
           <div class="card">
-            <span>Total produtos</span>
-            <strong id="totalProdutos">0</strong>
-            <p>Produtos cadastrados</p>
+            <span>Entradas</span>
+            <strong class="green" id="financeiroEntradas">R$ 0</strong>
+            <p>Dinheiro recebido</p>
           </div>
 
           <div class="card">
-            <span>Valor estoque</span>
-            <strong id="valorEstoque">R$ 0</strong>
-            <p>Custo total</p>
+            <span>Saídas</span>
+            <strong class="red" id="financeiroSaidas">R$ 0</strong>
+            <p>Gastos registrados</p>
           </div>
 
           <div class="card">
-            <span>Lucro estimado</span>
-            <strong id="lucroEstimado">R$ 0</strong>
-            <p>Valor previsto</p>
+            <span>Saldo</span>
+            <strong id="financeiroSaldo">R$ 0</strong>
+            <p>Entradas menos saídas</p>
           </div>
 
           <div class="card">
-            <span>Baixo estoque</span>
-            <strong id="baixoEstoque">0</strong>
-            <p>Produtos em alerta</p>
+            <span>Movimentações</span>
+            <strong id="financeiroTotal">0</strong>
+            <p>Registros no caixa</p>
           </div>
         </section>
 
         <section class="panel">
           <div class="filters">
-            <input type="text" placeholder="Buscar produto..." />
+            <input type="text" placeholder="Buscar movimentação..." />
 
             <select>
-              <option>Todas categorias</option>
+              <option>Todas</option>
+              <option>Entrada</option>
+              <option>Saída</option>
             </select>
 
-            <button class="btn-light">Exportar</button>
+            <button class="btn-light">
+              Exportar
+            </button>
           </div>
 
           <table>
             <thead>
               <tr>
-                <th>Produto</th>
+                <th>Descrição</th>
+                <th>Tipo</th>
                 <th>Categoria</th>
-                <th>Custo</th>
-                <th>Custo total</th>
-                <th>Venda</th>
-                <th>Estoque</th>
+                <th>Valor</th>
+                <th>Data</th>
                 <th>Ações</th>
               </tr>
             </thead>
 
-            <tbody id="tabelaProdutos"></tbody>
+            <tbody id="tabelaFinanceiro"></tbody>
           </table>
         </section>
       </main>
     </div>
 
-    <div class="modal" id="modal">
+    <div class="modal" id="modalFinanceiro">
       <div class="modal-content">
-        <h2>Novo Produto</h2>
+        <h2>Nova Movimentação</h2>
 
-        <input type="text" id="nome" placeholder="Nome do produto" />
-        <input type="text" id="categoria" placeholder="Categoria" />
-        <input type="number" id="custo" placeholder="Custo unitário" />
-        <input type="number" id="venda" placeholder="Preço de venda" />
-        <input type="number" id="estoque" placeholder="Estoque" />
+        <input type="text" id="financeiroDescricao" placeholder="Descrição" />
+
+        <select id="financeiroTipo">
+          <option value="">Tipo</option>
+          <option value="Entrada">Entrada</option>
+          <option value="Saída">Saída</option>
+        </select>
+
+        <input type="text" id="financeiroCategoria" placeholder="Categoria" />
+        <input type="number" id="financeiroValor" placeholder="Valor" />
 
         <div class="modal-buttons">
-          <button id="salvarProduto" class="btn-primary">Salvar</button>
-          <button id="fecharModal" class="btn-light">Cancelar</button>
+          <button id="salvarFinanceiro" class="btn-primary">
+            Salvar
+          </button>
+
+          <button id="fecharModalFinanceiro" class="btn-light">
+            Cancelar
+          </button>
         </div>
       </div>
     </div>
@@ -141,6 +161,7 @@
 <script src="../data/fabricacoes.js"></script>
 <script src="../data/receitas.js"></script>
 <script src="../data/clientes.js"></script>
+<script src="../data/financeiro.js"></script>
 <script src="../script.js"></script>
   </body>
 </html>

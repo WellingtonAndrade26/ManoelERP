@@ -9,6 +9,12 @@
 <link rel="manifest" href="./manifest.json" />
 <meta name="theme-color" content="#2f7d1d" />
 
+<script>
+  if (localStorage.getItem("tema") === "dark") {
+    document.documentElement.classList.add("dark")
+  }
+</script>
+
   </head>
 
   <body>
@@ -60,6 +66,11 @@
   <a href="./pages/relatorios.html">
     <button class="menu-btn">Relatórios</button>
   </a>
+
+  <a href="./pages/financeiro.html">
+    <button class="menu-btn">Financeiro</button>
+  </a>
+
 </nav>
         </div>
 
