@@ -7,17 +7,16 @@ if (!estaNoLogin && localStorage.getItem("logado") !== "sim") {
 
   window.location.href = caminhoLogin;
 }
-const sairSistema =
-  document.getElementById("sairSistema")
+
+const sairSistema = document.getElementById("sairSistema")
 
 if (sairSistema) {
   sairSistema.addEventListener("click", () => {
     localStorage.removeItem("logado")
 
-    const caminhoLogin =
-      window.location.pathname.includes("/pages/")
-        ? "../login.html"
-        : "./login.html"
+    const caminhoLogin = window.location.pathname.includes("/pages/")
+      ? "../login.html"
+      : "./login.html"
 
     window.location.href = caminhoLogin
   })
@@ -29,8 +28,7 @@ const fecharModal = document.getElementById("fecharModal")
 const salvarProduto = document.getElementById("salvarProduto")
 const tabelaProdutos = document.getElementById("tabelaProdutos")
 
-let produtosSalvos =
-  JSON.parse(localStorage.getItem("produtos")) || produtos
+let produtosSalvos = JSON.parse(localStorage.getItem("produtos")) || produtos
 
 function salvarLocalStorage() {
   localStorage.setItem("produtos", JSON.stringify(produtosSalvos))
@@ -138,7 +136,6 @@ if (fecharModal) {
   })
 }
 
-
 if (salvarProduto) {
   salvarProduto.addEventListener("click", () => {
     const nome = document.getElementById("nome").value
@@ -185,8 +182,7 @@ const salvarVenda = document.getElementById("salvarVenda")
 const produtoVenda = document.getElementById("produtoVenda")
 const tabelaVendas = document.getElementById("tabelaVendas")
 
-let vendasSalvas =
-  JSON.parse(localStorage.getItem("vendas")) || vendas
+let vendasSalvas = JSON.parse(localStorage.getItem("vendas")) || vendas
 
 function salvarVendasLocalStorage() {
   localStorage.setItem("vendas", JSON.stringify(vendasSalvas))
@@ -195,9 +191,7 @@ function salvarVendasLocalStorage() {
 function carregarProdutosNaVenda() {
   if (!produtoVenda) return
 
-  produtoVenda.innerHTML = `
-    <option value="">Selecione o produto</option>
-  `
+  produtoVenda.innerHTML = `<option value="">Selecione o produto</option>`
 
   produtosSalvos.forEach((produto) => {
     produtoVenda.innerHTML += `
@@ -236,10 +230,7 @@ function excluirVenda(id) {
   const venda = vendasSalvas.find((venda) => venda.id === id)
 
   if (venda) {
-    const produto = produtosSalvos.find(
-      (produto) => produto.id === venda.produtoId
-    )
-
+    const produto = produtosSalvos.find((produto) => produto.id === venda.produtoId)
     if (produto) {
       produto.estoque += venda.quantidade
     }
@@ -249,7 +240,6 @@ function excluirVenda(id) {
 
   salvarVendasLocalStorage()
   salvarLocalStorage()
-
   carregarVendas()
   carregarProdutos()
   atualizarDashboard()
@@ -303,12 +293,10 @@ if (salvarVenda) {
     }
 
     vendasSalvas.push(novaVenda)
-
     produto.estoque -= quantidade
 
     salvarVendasLocalStorage()
     salvarLocalStorage()
-
     carregarVendas()
     carregarProdutos()
     atualizarDashboard()
@@ -357,8 +345,7 @@ const fecharModalMateria = document.getElementById("fecharModalMateria")
 const salvarMateria = document.getElementById("salvarMateria")
 const tabelaMateria = document.getElementById("tabelaMateria")
 
-let materiasSalvas =
-  JSON.parse(localStorage.getItem("materiasPrimas")) || materiasPrimas
+let materiasSalvas = JSON.parse(localStorage.getItem("materiasPrimas")) || materiasPrimas
 
 function salvarMateriasLocalStorage() {
   localStorage.setItem("materiasPrimas", JSON.stringify(materiasSalvas))
@@ -410,9 +397,7 @@ function atualizarDashboardMateria() {
     }
   })
 
-  const custoMedio = materiasSalvas.length
-    ? investido / materiasSalvas.length
-    : 0
+  const custoMedio = materiasSalvas.length ? investido / materiasSalvas.length : 0
 
   totalEl.innerText = materiasSalvas.length
   investidoEl.innerText = `R$ ${investido.toFixed(2)}`
@@ -485,8 +470,7 @@ const salvarFabricacao = document.getElementById("salvarFabricacao")
 const fabricacaoReceita = document.getElementById("fabricacaoReceita")
 const tabelaFabricacao = document.getElementById("tabelaFabricacao")
 
-let fabricacoesSalvas =
-  JSON.parse(localStorage.getItem("fabricacoes")) || fabricacoes
+let fabricacoesSalvas = JSON.parse(localStorage.getItem("fabricacoes")) || fabricacoes
 
 function salvarFabricacoesLocalStorage() {
   localStorage.setItem("fabricacoes", JSON.stringify(fabricacoesSalvas))
@@ -495,15 +479,11 @@ function salvarFabricacoesLocalStorage() {
 function carregarReceitasFabricacao() {
   if (!fabricacaoReceita) return
 
-  fabricacaoReceita.innerHTML = `
-    <option value="">Selecione a receita</option>
-  `
+  fabricacaoReceita.innerHTML = `<option value="">Selecione a receita</option>`
 
   receitas.forEach((receita) => {
     fabricacaoReceita.innerHTML += `
-      <option value="${receita.id}">
-        ${receita.nome}
-      </option>
+      <option value="${receita.id}">${receita.nome}</option>
     `
   })
 }
@@ -554,9 +534,7 @@ function atualizarDashboardFabricacao() {
 }
 
 function excluirFabricacao(id) {
-  fabricacoesSalvas = fabricacoesSalvas.filter(
-    (fabricacao) => fabricacao.id !== id
-  )
+  fabricacoesSalvas = fabricacoesSalvas.filter((fabricacao) => fabricacao.id !== id)
 
   salvarFabricacoesLocalStorage()
   carregarFabricacoes()
@@ -577,20 +555,15 @@ if (fecharModalFabricacao) {
 
 if (salvarFabricacao) {
   salvarFabricacao.addEventListener("click", () => {
-    const receitaId = Number(
-  document.getElementById("fabricacaoReceita").value
-)
+    const receitaId = Number(document.getElementById("fabricacaoReceita").value)
+    const receita = receitas.find((item) => item.id === receitaId)
 
-const receita = receitas.find(
-  (item) => item.id === receitaId
-)
+    if (!receita) {
+      alert("Selecione uma receita")
+      return
+    }
 
-if (!receita) {
-  alert("Selecione uma receita")
-  return
-}
-
-const produto = receita.nome
+    const produto = receita.nome
     const quantidade = Number(document.getElementById("fabricacaoQuantidade").value)
     const custoTotal = Number(document.getElementById("fabricacaoCustoTotal").value)
     const vendaKg = Number(document.getElementById("fabricacaoVendaKg").value)
@@ -602,30 +575,24 @@ const produto = receita.nome
 
     let custoCalculado = 0
 
-for (const ingrediente of receita.ingredientes) {
-  const materia = materiasSalvas.find(
-    (item) => item.id === ingrediente.materiaId
-  )
+    for (const ingrediente of receita.ingredientes) {
+      const materia = materiasSalvas.find((item) => item.id === ingrediente.materiaId)
 
-  if (!materia) {
-    alert(`Matéria-prima não encontrada: ${ingrediente.nome}`)
-    return
-  }
+      if (!materia) {
+        alert(`Matéria-prima não encontrada: ${ingrediente.nome}`)
+        return
+      }
 
-  const quantidadeUsada =
-    ingrediente.quantidade * quantidade
+      const quantidadeUsada = ingrediente.quantidade * quantidade
 
-  if (materia.estoque < quantidadeUsada) {
-    alert(`Estoque insuficiente de ${materia.nome}`)
-    return
-  }
+      if (materia.estoque < quantidadeUsada) {
+        alert(`Estoque insuficiente de ${materia.nome}`)
+        return
+      }
 
-  const custoUnidade =
-    materia.valorPago / materia.quantidade
-
-  custoCalculado +=
-    custoUnidade * quantidadeUsada
-}
+      const custoUnidade = materia.valorPago / materia.quantidade
+      custoCalculado += custoUnidade * quantidadeUsada
+    }
 
     const custoTotalReal = custoCalculado
     const custoKg = custoTotalReal / quantidade
@@ -643,14 +610,11 @@ for (const ingrediente of receita.ingredientes) {
     fabricacoesSalvas.push(novaFabricacao)
 
     receita.ingredientes.forEach((ingrediente) => {
-  const materia = materiasSalvas.find(
-    (item) => item.id === ingrediente.materiaId
-  )
-
-  if (materia) {
-    materia.estoque -= ingrediente.quantidade * quantidade
-  }
-})
+      const materia = materiasSalvas.find((item) => item.id === ingrediente.materiaId)
+      if (materia) {
+        materia.estoque -= ingrediente.quantidade * quantidade
+      }
+    })
 
     const produtoFinal = {
       id: Date.now() + 1,
@@ -663,10 +627,9 @@ for (const ingrediente of receita.ingredientes) {
 
     produtosSalvos.push(produtoFinal)
 
-   salvarFabricacoesLocalStorage()
-   salvarLocalStorage()
-   salvarMateriasLocalStorage()
-
+    salvarFabricacoesLocalStorage()
+    salvarLocalStorage()
+    salvarMateriasLocalStorage()
     carregarFabricacoes()
     atualizarDashboardFabricacao()
     carregarProdutos()
@@ -686,16 +649,12 @@ const modalReceita = document.getElementById("modalReceita")
 const abrirModalReceita = document.getElementById("abrirModalReceita")
 const fecharModalReceita = document.getElementById("fecharModalReceita")
 const salvarReceita = document.getElementById("salvarReceita")
-
 const receitaMateria = document.getElementById("receitaMateria")
 const adicionarIngrediente = document.getElementById("adicionarIngrediente")
 const listaIngredientes = document.getElementById("listaIngredientes")
-
 const tabelaReceitas = document.getElementById("tabelaReceitas")
 
-let receitasSalvas =
-  JSON.parse(localStorage.getItem("receitas")) || receitas
-
+let receitasSalvas = JSON.parse(localStorage.getItem("receitas")) || receitas
 let ingredientesReceita = []
 
 function salvarReceitasLocalStorage() {
@@ -705,15 +664,11 @@ function salvarReceitasLocalStorage() {
 function carregarMateriasReceita() {
   if (!receitaMateria) return
 
-  receitaMateria.innerHTML = `
-    <option value="">Selecione uma matéria-prima</option>
-  `
+  receitaMateria.innerHTML = `<option value="">Selecione uma matéria-prima</option>`
 
   materiasSalvas.forEach((materia) => {
     receitaMateria.innerHTML += `
-      <option value="${materia.id}">
-        ${materia.nome}
-      </option>
+      <option value="${materia.id}">${materia.nome}</option>
     `
   })
 }
@@ -728,14 +683,9 @@ function renderizarIngredientes() {
       <div class="ingrediente-item">
         <div>
           <strong>${ingrediente.nome}</strong>
-          <span>
-            ${ingrediente.quantidade} ${ingrediente.unidade}
-          </span>
+          <span>${ingrediente.quantidade} ${ingrediente.unidade}</span>
         </div>
-
-        <button onclick="removerIngrediente(${index})">
-          X
-        </button>
+        <button onclick="removerIngrediente(${index})">X</button>
       </div>
     `
   })
@@ -743,14 +693,12 @@ function renderizarIngredientes() {
 
 function removerIngrediente(index) {
   ingredientesReceita.splice(index, 1)
-
   renderizarIngredientes()
 }
 
 if (abrirModalReceita) {
   abrirModalReceita.addEventListener("click", () => {
     carregarMateriasReceita()
-
     modalReceita.classList.add("active")
   })
 }
@@ -764,20 +712,14 @@ if (fecharModalReceita) {
 if (adicionarIngrediente) {
   adicionarIngrediente.addEventListener("click", () => {
     const materiaId = Number(receitaMateria.value)
-
-    const quantidade = Number(
-      document.getElementById("receitaQuantidade").value
-    )
+    const quantidade = Number(document.getElementById("receitaQuantidade").value)
 
     if (!materiaId || !quantidade) {
       alert("Selecione ingrediente e quantidade")
       return
     }
 
-    const materia = materiasSalvas.find(
-      (item) => item.id === materiaId
-    )
-
+    const materia = materiasSalvas.find((item) => item.id === materiaId)
     if (!materia) return
 
     ingredientesReceita.push({
@@ -785,9 +727,7 @@ if (adicionarIngrediente) {
       nome: materia.nome,
       quantidade,
       unidade: materia.unidade,
-      custo:
-        (materia.valorPago / materia.quantidade) *
-        quantidade,
+      custo: (materia.valorPago / materia.quantidade) * quantidade,
     })
 
     renderizarIngredientes()
@@ -808,33 +748,17 @@ function carregarReceitas() {
       0
     )
 
-    const custoKg =
-      custoTotal / receita.rendimentoKg
+    const custoKg = custoTotal / receita.rendimentoKg
 
     tabelaReceitas.innerHTML += `
       <tr>
         <td>${receita.nome}</td>
-
+        <td>${receita.rendimentoKg} kg</td>
+        <td>${receita.ingredientes.length}</td>
+        <td>R$ ${custoTotal.toFixed(2)}</td>
+        <td class="green">R$ ${custoKg.toFixed(2)}</td>
         <td>
-          ${receita.rendimentoKg} kg
-        </td>
-
-        <td>
-          ${receita.ingredientes.length}
-        </td>
-
-        <td>
-          R$ ${custoTotal.toFixed(2)}
-        </td>
-
-        <td class="green">
-          R$ ${custoKg.toFixed(2)}
-        </td>
-
-        <td>
-          <button onclick="excluirReceita(${receita.id})">
-            Excluir
-          </button>
+          <button onclick="excluirReceita(${receita.id})">Excluir</button>
         </td>
       </tr>
     `
@@ -842,17 +766,10 @@ function carregarReceitas() {
 }
 
 function atualizarDashboardReceitas() {
-  const totalEl =
-    document.getElementById("receitasTotal")
-
-  const custoMedioEl =
-    document.getElementById("receitasCustoMedio")
-
-  const ingredientesEl =
-    document.getElementById("receitasIngredientes")
-
-  const maiorCustoEl =
-    document.getElementById("receitasMaiorCusto")
+  const totalEl = document.getElementById("receitasTotal")
+  const custoMedioEl = document.getElementById("receitasCustoMedio")
+  const ingredientesEl = document.getElementById("receitasIngredientes")
+  const maiorCustoEl = document.getElementById("receitasMaiorCusto")
 
   if (!totalEl) return
 
@@ -862,60 +779,38 @@ function atualizarDashboardReceitas() {
 
   receitasSalvas.forEach((receita) => {
     const custo = receita.ingredientes.reduce(
-      (total, ingrediente) =>
-        total + ingrediente.custo,
+      (total, ingrediente) => total + ingrediente.custo,
       0
     )
 
     custoTotal += custo
-
-    ingredientesTotal +=
-      receita.ingredientes.length
+    ingredientesTotal += receita.ingredientes.length
 
     if (custo > maiorCusto) {
       maiorCusto = custo
     }
   })
 
-  const custoMedio =
-    receitasSalvas.length
-      ? custoTotal / receitasSalvas.length
-      : 0
+  const custoMedio = receitasSalvas.length ? custoTotal / receitasSalvas.length : 0
 
-  totalEl.innerText =
-    receitasSalvas.length
-
-  custoMedioEl.innerText =
-    `R$ ${custoMedio.toFixed(2)}`
-
-  ingredientesEl.innerText =
-    ingredientesTotal
-
-  maiorCustoEl.innerText =
-    `R$ ${maiorCusto.toFixed(2)}`
+  totalEl.innerText = receitasSalvas.length
+  custoMedioEl.innerText = `R$ ${custoMedio.toFixed(2)}`
+  ingredientesEl.innerText = ingredientesTotal
+  maiorCustoEl.innerText = `R$ ${maiorCusto.toFixed(2)}`
 }
 
 function excluirReceita(id) {
-  receitasSalvas =
-    receitasSalvas.filter(
-      (receita) => receita.id !== id
-    )
+  receitasSalvas = receitasSalvas.filter((receita) => receita.id !== id)
 
   salvarReceitasLocalStorage()
-
   carregarReceitas()
-
   atualizarDashboardReceitas()
 }
 
 if (salvarReceita) {
   salvarReceita.addEventListener("click", () => {
-    const nome =
-      document.getElementById("receitaNome").value
-
-    const rendimentoKg = Number(
-      document.getElementById("receitaRendimento").value
-    )
+    const nome = document.getElementById("receitaNome").value
+    const rendimentoKg = Number(document.getElementById("receitaRendimento").value)
 
     if (!nome || !rendimentoKg) {
       alert("Preencha nome e rendimento")
@@ -937,18 +832,14 @@ if (salvarReceita) {
     receitasSalvas.push(novaReceita)
 
     salvarReceitasLocalStorage()
-
     carregarReceitas()
-
     atualizarDashboardReceitas()
 
     modalReceita.classList.remove("active")
 
     document.getElementById("receitaNome").value = ""
     document.getElementById("receitaRendimento").value = ""
-
     ingredientesReceita = []
-
     renderizarIngredientes()
   })
 }
@@ -960,47 +851,24 @@ function carregarGraficosDashboard() {
   if (!graficoVendas || !graficoEstoque) return
   if (typeof Chart === "undefined") return
 
-  const totalVendas = vendasSalvas.reduce(
-    (total, venda) => total + venda.total,
-    0
-  )
-
-  const totalLucro = vendasSalvas.reduce(
-    (total, venda) => total + venda.lucro,
-    0
-  )
+  const totalVendas = vendasSalvas.reduce((total, venda) => total + venda.total, 0)
+  const totalLucro = vendasSalvas.reduce((total, venda) => total + venda.lucro, 0)
 
   new Chart(graficoVendas, {
     type: "bar",
-    options: {
-  responsive: true,
-  maintainAspectRatio: false,
-},
+    options: { responsive: true, maintainAspectRatio: false },
     data: {
       labels: ["Faturamento", "Lucro"],
-      datasets: [
-        {
-          label: "Valores em R$",
-          data: [totalVendas, totalLucro],
-        },
-      ],
+      datasets: [{ label: "Valores em R$", data: [totalVendas, totalLucro] }],
     },
   })
 
   new Chart(graficoEstoque, {
     type: "doughnut",
-    options: {
-  responsive: true,
-  maintainAspectRatio: false,
-},
+    options: { responsive: true, maintainAspectRatio: false },
     data: {
       labels: produtosSalvos.map((produto) => produto.nome),
-      datasets: [
-        {
-          label: "Estoque",
-          data: produtosSalvos.map((produto) => produto.estoque),
-        },
-      ],
+      datasets: [{ label: "Estoque", data: produtosSalvos.map((produto) => produto.estoque) }],
     },
   })
 }
@@ -1050,13 +918,10 @@ function carregarAlertasDashboard() {
 
   alertas.forEach((alerta) => {
     listaAlertas.innerHTML += `
-      <div class="alert-item ${alerta.tipo}">
-        ${alerta.texto}
-      </div>
+      <div class="alert-item ${alerta.tipo}">${alerta.texto}</div>
     `
   })
 }
-
 
 const modalEntrada = document.getElementById("modalEntrada")
 const abrirModalEntrada = document.getElementById("abrirModalEntrada")
@@ -1067,9 +932,7 @@ const produtoEntrada = document.getElementById("produtoEntrada")
 function carregarProdutosEntrada() {
   if (!produtoEntrada) return
 
-  produtoEntrada.innerHTML = `
-    <option value="">Selecione o produto</option>
-  `
+  produtoEntrada.innerHTML = `<option value="">Selecione o produto</option>`
 
   produtosSalvos.forEach((produto) => {
     produtoEntrada.innerHTML += `
@@ -1096,32 +959,27 @@ if (fecharModalEntrada) {
 if (salvarEntrada) {
   salvarEntrada.addEventListener("click", () => {
     const produtoId = Number(produtoEntrada.value)
-    const quantidade = Number(
-      document.getElementById("quantidadeEntrada").value
-    )
+    const quantidade = Number(document.getElementById("quantidadeEntrada").value)
 
     if (!produtoId || !quantidade) {
       alert("Selecione o produto e informe a quantidade")
       return
     }
 
-    const produto = produtosSalvos.find(
-      (item) => item.id === produtoId
-    )
-
+    const produto = produtosSalvos.find((item) => item.id === produtoId)
     if (!produto) return
 
     produto.estoque += quantidade
 
     salvarLocalStorage()
-carregarProdutos()
-carregarEstoque()
-atualizarDashboard()
-atualizarResumo()
-carregarProdutosEntrada()
-carregarProdutosSaida()
-carregarGraficosDashboard()
-carregarAlertasDashboard()
+    carregarProdutos()
+    carregarEstoque()
+    atualizarDashboard()
+    atualizarResumo()
+    carregarProdutosEntrada()
+    carregarProdutosSaida()
+    carregarGraficosDashboard()
+    carregarAlertasDashboard()
 
     modalEntrada.classList.remove("active")
 
@@ -1130,8 +988,7 @@ carregarAlertasDashboard()
   })
 }
 
-const tabelaEstoque =
-  document.getElementById("tabelaEstoque")
+const tabelaEstoque = document.getElementById("tabelaEstoque")
 
 function carregarEstoque() {
   if (!tabelaEstoque) return
@@ -1142,37 +999,17 @@ function carregarEstoque() {
     tabelaEstoque.innerHTML += `
       <tr>
         <td>${produto.nome}</td>
-
-        <td class="${
-          produto.estoque <= 5 ? "red" : "orange"
-        }">
-          ${produto.estoque} kg
+        <td class="${produto.estoque <= 5 ? "red" : "orange"}">
+          ${produto.estoque} un.
         </td>
-
-        <td>10 kg</td>
-
+        <td>10</td>
+        <td>${new Date().toLocaleDateString("pt-BR")}</td>
+        <td class="${produto.estoque <= 5 ? "red" : "green"}">
+          ${produto.estoque <= 5 ? "Baixo estoque" : "Disponível"}
+        </td>
         <td>
-          ${new Date().toLocaleDateString("pt-BR")}
-        </td>
-
-        <td class="${
-          produto.estoque <= 5 ? "red" : "green"
-        }">
-          ${
-            produto.estoque <= 5
-              ? "Baixo estoque"
-              : "Disponível"
-          }
-        </td>
-
-        <td>
-          <button onclick="abrirEntradaRapida(${produto.id})">
-            Entrada
-          </button>
-
-          <button onclick="abrirSaidaRapida(${produto.id})">
-            Saída
-          </button>
+          <button onclick="abrirEntradaRapida(${produto.id})">Entrada</button>
+          <button onclick="abrirSaidaRapida(${produto.id})">Saída</button>
         </td>
       </tr>
     `
@@ -1181,9 +1018,7 @@ function carregarEstoque() {
 
 function abrirEntradaRapida(id) {
   carregarProdutosEntrada()
-
   produtoEntrada.value = id
-
   modalEntrada.classList.add("active")
 }
 
@@ -1195,9 +1030,7 @@ const produtoSaida = document.getElementById("produtoSaida")
 function carregarProdutosSaida() {
   if (!produtoSaida) return
 
-  produtoSaida.innerHTML = `
-    <option value="">Selecione o produto</option>
-  `
+  produtoSaida.innerHTML = `<option value="">Selecione o produto</option>`
 
   produtosSalvos.forEach((produto) => {
     produtoSaida.innerHTML += `
@@ -1210,9 +1043,7 @@ function carregarProdutosSaida() {
 
 function abrirSaidaRapida(id) {
   carregarProdutosSaida()
-
   produtoSaida.value = id
-
   modalSaida.classList.add("active")
 }
 
@@ -1233,7 +1064,6 @@ if (salvarSaida) {
     }
 
     const produto = produtosSalvos.find((item) => item.id === produtoId)
-
     if (!produto) return
 
     if (quantidade > produto.estoque) {
@@ -1264,8 +1094,7 @@ const fecharModalCliente = document.getElementById("fecharModalCliente")
 const salvarCliente = document.getElementById("salvarCliente")
 const tabelaClientes = document.getElementById("tabelaClientes")
 
-let clientesSalvos =
-  JSON.parse(localStorage.getItem("clientes")) || []
+let clientesSalvos = JSON.parse(localStorage.getItem("clientes")) || []
 
 function salvarClientesLocalStorage() {
   localStorage.setItem("clientes", JSON.stringify(clientesSalvos))
@@ -1285,9 +1114,7 @@ function carregarClientes() {
         <td>${cliente.observacao}</td>
         <td class="green">Ativo</td>
         <td>
-          <button onclick="excluirCliente(${cliente.id})">
-            Excluir
-          </button>
+          <button onclick="excluirCliente(${cliente.id})">Excluir</button>
         </td>
       </tr>
     `
@@ -1309,9 +1136,7 @@ function atualizarDashboardClientes() {
 }
 
 function excluirCliente(id) {
-  clientesSalvos = clientesSalvos.filter(
-    (cliente) => cliente.id !== id
-  )
+  clientesSalvos = clientesSalvos.filter((cliente) => cliente.id !== id)
 
   salvarClientesLocalStorage()
   carregarClientes()
@@ -1353,7 +1178,7 @@ if (salvarCliente) {
 
     salvarClientesLocalStorage()
     carregarClientes()
-atualizarDashboardClientes()
+    atualizarDashboardClientes()
 
     modalCliente.classList.remove("active")
 
@@ -1364,29 +1189,20 @@ atualizarDashboardClientes()
   })
 }
 
-const tabelaRelatorios =
-  document.getElementById("tabelaRelatorios")
+const tabelaRelatorios = document.getElementById("tabelaRelatorios")
 
 function carregarRelatorios() {
   if (!tabelaRelatorios) return
 
-  const faturamentoEl =
-    document.getElementById("relatorioFaturamento")
-
-  const lucroEl =
-    document.getElementById("relatorioLucro")
-
-  const pedidosEl =
-    document.getElementById("relatorioProdutos")
-
-  const maisVendidoEl =
-    document.getElementById("relatorioMaisVendido")
+  const faturamentoEl = document.getElementById("relatorioFaturamento")
+  const lucroEl = document.getElementById("relatorioLucro")
+  const pedidosEl = document.getElementById("relatorioProdutos")
+  const maisVendidoEl = document.getElementById("relatorioMaisVendido")
 
   tabelaRelatorios.innerHTML = ""
 
   let faturamento = 0
   let lucro = 0
-
   const produtosVendidos = {}
 
   vendasSalvas.forEach((venda) => {
@@ -1402,34 +1218,18 @@ function carregarRelatorios() {
     tabelaRelatorios.innerHTML += `
       <tr>
         <td>${venda.cliente}</td>
-
         <td>${venda.produto}</td>
-
         <td>${venda.quantidade}</td>
-
         <td>${venda.pagamento}</td>
-
-        <td class="green">
-          R$ ${venda.total.toFixed(2)}
-        </td>
-
-        <td>
-          ${venda.pagamento === "Fiado"
-            ? "Pendente"
-            : "Pago"}
-        </td>
+        <td class="green">R$ ${venda.total.toFixed(2)}</td>
+        <td>${venda.pagamento === "Fiado" ? "Pendente" : "Pago"}</td>
       </tr>
     `
   })
 
-  faturamentoEl.innerText =
-    `R$ ${faturamento.toFixed(2)}`
-
-  lucroEl.innerText =
-    `R$ ${lucro.toFixed(2)}`
-
-  pedidosEl.innerText =
-    vendasSalvas.length
+  if (faturamentoEl) faturamentoEl.innerText = `R$ ${faturamento.toFixed(2)}`
+  if (lucroEl) lucroEl.innerText = `R$ ${lucro.toFixed(2)}`
+  if (pedidosEl) pedidosEl.innerText = vendasSalvas.length
 
   let maisVendido = "Nenhum"
   let maiorQuantidade = 0
@@ -1441,61 +1241,53 @@ function carregarRelatorios() {
     }
   }
 
-  maisVendidoEl.innerText = maisVendido
+  if (maisVendidoEl) maisVendidoEl.innerText = maisVendido
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const gerarRelatorio = document.getElementById("gerarRelatorio")
-  const imprimirRelatorio = document.getElementById("imprimirRelatorio")
+const gerarRelatorio = document.getElementById("gerarRelatorio")
+const imprimirRelatorio = document.getElementById("imprimirRelatorio")
 
-  if (gerarRelatorio) {
-    gerarRelatorio.addEventListener("click", () => {
-      carregarRelatorios()
-    })
-  }
+if (gerarRelatorio) {
+  gerarRelatorio.addEventListener("click", () => {
+    carregarRelatorios()
+  })
+}
 
-  if (imprimirRelatorio) {
-    imprimirRelatorio.addEventListener("click", () => {
-      window.print()
-    })
-  }
-})
+if (imprimirRelatorio) {
+  imprimirRelatorio.addEventListener("click", () => {
+    window.print()
+  })
+}
 
+// Inicialização
 carregarClientes()
-
 carregarProdutosSaida()
-
 carregarProdutosEntrada()
-
-
 carregarMateriasReceita()
-
 carregarReceitas()
-
 atualizarDashboardReceitas()
-
 carregarFabricacoes()
 atualizarDashboardFabricacao()
 carregarReceitasFabricacao()
-
 carregarMaterias()
 atualizarDashboardMateria()
-
 carregarProdutosNaVenda()
 carregarVendas()
-
 carregarProdutos()
 atualizarDashboard()
 atualizarResumo()
 atualizarDashboardVendas()
 carregarGraficosDashboard()
 carregarAlertasDashboard()
-carregarEstoque() 
+carregarEstoque()
 atualizarDashboardClientes()
 carregarRelatorios()
 
-document.addEventListener("DOMContentLoaded", () => {
-  const noIndex = window.location.pathname.endsWith("index.html") || window.location.pathname === "/"
+// Dark mode — apenas no index
+const noIndex =
+  window.location.pathname.endsWith("index.html") ||
+  window.location.pathname === "/" ||
+  window.location.pathname.endsWith("/ManoelERP/")
 
 if (noIndex) {
   const toggleDark = document.getElementById("toggleDark")
@@ -1503,6 +1295,8 @@ if (noIndex) {
   if (localStorage.getItem("tema") === "dark") {
     document.body.classList.add("dark")
     if (toggleDark) toggleDark.innerText = "☀️ Light mode"
+  } else {
+    if (toggleDark) toggleDark.innerText = "🌙 Dark mode"
   }
 
   if (toggleDark) {
@@ -1520,11 +1314,11 @@ if (noIndex) {
   }
 }
 
+// Service Worker
 if ("serviceWorker" in navigator) {
-  const caminhoSW =
-    window.location.pathname.includes("/pages/")
-      ? "../service-worker.js"
-      : "./service-worker.js"
+  const caminhoSW = window.location.pathname.includes("/pages/")
+    ? "../service-worker.js"
+    : "./service-worker.js"
 
   navigator.serviceWorker.register(caminhoSW)
 }
