@@ -1,11 +1,11 @@
-const estaNoLogin = window.location.pathname.includes("login.html")
+const estaNoLogin = window.location.pathname.includes("login.html");
 
 if (!estaNoLogin && localStorage.getItem("logado") !== "sim") {
   const caminhoLogin = window.location.pathname.includes("/pages/")
     ? "../login.html"
-    : "./login.html"
+    : "./login.html";
 
-  window.location.href = caminhoLogin
+  window.location.href = caminhoLogin;
 }
 const sairSistema =
   document.getElementById("sairSistema")
