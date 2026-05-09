@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matéria-prima | Linguiçaria</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div>
+          <div class="brand">
+            <div class="logo">
+  <img src="../assets/logo.png" alt="Logo Artesanais do Manoel">
+</div>
+            <div>
+              <h1>Linguiçaria</h1>
+              <p>Sistema de gerenciamento</p>
+            </div>
+          </div>
+
+          <nav class="menu">
+            <a href="../index.html"><button class="menu-btn">Resumo</button></a>
+            <a href="./materia-prima.html"><button class="menu-btn active">Matéria-prima</button></a>
+            <a href="./produtos.html"><button class="menu-btn">Produtos</button></a>
+            <a href="./fabricacao.html"><button class="menu-btn">Fabricação</button></a>
+            <a href="./receitas.html"><button class="menu-btn">Receitas</button></a>
+            <a href="./clientes.html"><button class="menu-btn">Clientes</button></a>
+            <a href="./vendas.html"><button class="menu-btn">Vendas</button></a>
+            <a href="./estoque.html"><button class="menu-btn">Estoque</button></a>
+            <a href="./relatorios.html"><button class="menu-btn">Relatórios</button></a>
+          </nav>
+        </div>
+
+        <div class="user">
+          <div class="avatar">M</div>
+          <div>
+            <strong>Manoel</strong>
+            <p>Administrador</p>
+          </div>
+          <button class="btn-light" id="sairSistema"> Sair </button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="top">
+          <div>
+            <h2>Matéria-prima</h2>
+            <p>Controle tudo que é comprado para fabricar os produtos.</p>
+          </div>
+
+          <button class="btn-primary" id="abrirModalMateria">
+  + Nova matéria-prima
+</button> 
+        </header>
+
+        <section class="cards">
+  <div class="card">
+    <span>Itens</span>
+    <strong id="materiaTotalItens">0</strong>
+    <p>Matérias cadastradas</p>
+  </div>
+
+  <div class="card">
+    <span>Investido</span>
+    <strong id="materiaInvestido">R$ 0</strong>
+    <p>Total comprado</p>
+  </div>
+
+  <div class="card">
+    <span>Estoque crítico</span>
+    <strong class="red" id="materiaCritico">0</strong>
+    <p>Itens para repor</p>
+  </div>
+
+  <div class="card">
+    <span>Custo médio</span>
+    <strong id="materiaCustoMedio">R$ 0</strong>
+    <p>Média dos itens</p>
+  </div>
+</section>
+
+        <section class="panel">
+          <div class="filters">
+            <input type="text" placeholder="Buscar matéria-prima..." />
+
+            <select>
+              <option>Todas unidades</option>
+              <option>Kg</option>
+              <option>Unidade</option>
+              <option>Pacote</option>
+            </select>
+
+            <button class="btn-light">Exportar</button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Quantidade</th>
+                <th>Unidade</th>
+                <th>Valor pago</th>
+                <th>Custo por unidade</th>
+                <th>Estoque atual</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+
+            <tbody id="tabelaMateria"></tbody>
+              <tr>
+                <td>Carne suína</td>
+                <td>20</td>
+                <td>kg</td>
+                <td>R$ 320,00</td>
+                <td>R$ 16,00</td>
+                <td class="green">20 kg</td>
+                <td class="green">Disponível</td>
+                <td>
+                  <button>Editar</button>
+                  <button>Excluir</button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Toucinho</td>
+                <td>5</td>
+                <td>kg</td>
+                <td>R$ 65,00</td>
+                <td>R$ 13,00</td>
+                <td class="orange">5 kg</td>
+                <td class="orange">Atenção</td>
+                <td>
+                  <button>Editar</button>
+                  <button>Excluir</button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Tripa</td>
+                <td>1</td>
+                <td>pacote</td>
+                <td>R$ 35,00</td>
+                <td>R$ 35,00</td>
+                <td class="red">1 pacote</td>
+                <td class="red">Baixo</td>
+                <td>
+                  <button>Editar</button>
+                  <button>Excluir</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+<div class="modal" id="modalMateria">
+  <div class="modal-content">
+    <h2>Nova Matéria-prima</h2>
+
+    <input type="text" id="materiaNome" placeholder="Nome do item" />
+    <input type="number" id="materiaQuantidade" placeholder="Quantidade comprada" />
+
+    <select id="materiaUnidade">
+      <option value="">Unidade</option>
+      <option value="kg">Kg</option>
+      <option value="un">Unidade</option>
+      <option value="pacote">Pacote</option>
+      <option value="litro">Litro</option>
+    </select>
+
+    <input type="number" id="materiaValorPago" placeholder="Valor pago" />
+    <input type="number" id="materiaEstoque" placeholder="Estoque atual" />
+
+    <div class="modal-buttons">
+      <button id="salvarMateria" class="btn-primary">Salvar</button>
+      <button id="fecharModalMateria" class="btn-light">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+    <script src="../data/materiaPrima.js"></script>
+    <script src="../script.js"></script>
+  </body>
+</html>

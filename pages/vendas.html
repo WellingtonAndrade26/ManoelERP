@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>Vendas | Linguiçaria</title>
+
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+
+  <body>
+    <div class="app">
+
+      <!-- MENU -->
+      <aside class="sidebar">
+
+        <div>
+
+          <div class="brand">
+            <div class="logo">
+  <img src="../assets/logo.png" alt="Logo Artesanais do Manoel">
+</div>
+
+            <div>
+              <h1>Linguiçaria</h1>
+              <p>Sistema de gerenciamento</p>
+            </div>
+          </div>
+
+          <nav class="menu">
+
+            <a href="../index.html"><button class="menu-btn">Resumo</button></a>
+            <a href="./materia-prima.html"><button class="menu-btn">Matéria-prima</button></a>
+            <a href="./produtos.html"><button class="menu-btn">Produtos</button></a>
+            <a href="./fabricacao.html"><button class="menu-btn">Fabricação</button></a>
+            <a href="./receitas.html"><button class="menu-btn">Receitas</button></a>
+            <a href="./clientes.html"><button class="menu-btn">Clientes</button></a>
+            <a href="./vendas.html"><button class="menu-btn active">Vendas</button></a>
+            <a href="./estoque.html"><button class="menu-btn">Estoque</button></a>
+            <a href="./relatorios.html"><button class="menu-btn">Relatórios</button></a>
+          </nav>
+        </div>
+
+        <div class="user">
+          <div class="avatar">M</div>
+
+          <div>
+            <strong>Manoel</strong>
+            <p>Administrador</p>
+          </div>
+          <button class="btn-light" id="sairSistema"> Sair </button>
+        </div>
+
+      </aside>
+
+      <!-- CONTEÚDO -->
+      <main class="content">
+
+        <header class="top">
+
+          <div>
+            <h2>Vendas</h2>
+
+            <p>
+              Controle vendas, pagamentos e lucro.
+            </p>
+          </div>
+
+          <button class="btn-primary" id="abrirModalVenda">
+  + Nova venda
+</button>
+
+        </header>
+
+        <!-- CARDS -->
+        <section class="cards">
+  <div class="card">
+    <span>Vendas</span>
+    <strong class="green" id="vendasTotal">R$ 0</strong>
+    <p>Total vendido</p>
+  </div>
+
+  <div class="card">
+    <span>Pedidos</span>
+    <strong id="vendasPedidos">0</strong>
+    <p>Vendas registradas</p>
+  </div>
+
+  <div class="card">
+    <span>Lucro</span>
+    <strong class="green" id="vendasLucro">R$ 0</strong>
+    <p>Lucro estimado</p>
+  </div>
+
+  <div class="card">
+    <span>Fiado</span>
+    <strong class="red" id="vendasFiado">R$ 0</strong>
+    <p>Pagamentos pendentes</p>
+  </div>
+</section>
+
+        </section>
+
+        <!-- TABELA -->
+        <section class="panel">
+
+          <div class="filters">
+
+            <input
+              type="text"
+              placeholder="Buscar venda..."
+            />
+
+            <select>
+              <option>Todas formas</option>
+              <option>Pix</option>
+              <option>Dinheiro</option>
+              <option>Cartão</option>
+            </select>
+
+            <button class="btn-light">
+              Exportar
+            </button>
+
+          </div>
+
+          <table>
+
+            <thead>
+  <tr>
+    <th>Cliente</th>
+    <th>Produto</th>
+    <th>Qtd</th>
+    <th>Pagamento</th>
+    <th>Total</th>
+    <th>Status</th>
+    <th>Ações</th>
+  </tr>
+</thead>
+
+            <tbody id="tabelaVendas">
+
+              
+
+            </tbody>
+
+          </table>
+
+        </section>
+
+      </main>
+    </div>
+<div class="modal" id="modalVenda">
+  <div class="modal-content">
+    <h2>Nova Venda</h2>
+
+    <input type="text" id="clienteVenda" placeholder="Nome do cliente" />
+
+    <select id="produtoVenda">
+      <option value="">Selecione o produto</option>
+    </select>
+
+    <input type="number" id="quantidadeVenda" placeholder="Quantidade vendida" />
+
+    <select id="pagamentoVenda">
+      <option value="">Forma de pagamento</option>
+      <option>Pix</option>
+      <option>Dinheiro</option>
+      <option>Cartão</option>
+      <option>Fiado</option>
+    </select>
+
+    <div class="modal-buttons">
+      <button id="salvarVenda" class="btn-primary">Salvar venda</button>
+      <button id="fecharModalVenda" class="btn-light">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script src="../data/produtos.js"></script>
+<script src="../data/vendas.js"></script>
+<script src="../script.js"></script>
+  </body>
+</html>

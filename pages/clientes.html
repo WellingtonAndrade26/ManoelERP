@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>Clientes | Linguiçaria</title>
+
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+
+  <body>
+    <div class="app">
+
+      <!-- MENU -->
+      <aside class="sidebar">
+        <div>
+          <div class="brand">
+            <div class="logo">
+  <img src="../assets/logo.png" alt="Logo Artesanais do Manoel">
+</div>
+            <div>
+              <h1>Linguiçaria</h1>
+              <p>Sistema de gerenciamento</p>
+            </div>
+          </div>
+
+          <nav class="menu">
+            <a href="../index.html"><button class="menu-btn">Resumo</button></a>
+            <a href="./materia-prima.html"><button class="menu-btn">Matéria-prima</button></a>
+            <a href="./produtos.html"><button class="menu-btn">Produtos</button></a>
+            <a href="./fabricacao.html"><button class="menu-btn">Fabricação</button></a>
+            <a href="./receitas.html"><button class="menu-btn">Receitas</button></a>
+            <a href="./clientes.html"><button class="menu-btn active">Clientes</button></a>
+            <a href="./vendas.html"><button class="menu-btn">Vendas</button></a>
+            <a href="./estoque.html"><button class="menu-btn">Estoque</button></a>
+            <a href="./relatorios.html"><button class="menu-btn">Relatórios</button></a>
+          </nav>
+        </div>
+
+        <div class="user">
+          <div class="avatar">M</div>
+
+          <div>
+            <strong>Manoel</strong>
+            <p>Administrador</p>
+          </div>
+          <button class="btn-light" id="sairSistema">
+  Sair
+</button>
+        </div>
+      </aside>
+
+      <!-- CONTEÚDO -->
+      <main class="content">
+
+        <header class="top">
+          <div>
+            <h2>Clientes</h2>
+
+            <p>
+              Gerencie clientes, pagamentos e histórico.
+            </p>
+          </div>
+
+          <button class="btn-primary">
+            + Novo cliente
+          </button>
+          <button class="btn-light" id="sairSistema">
+  Sair
+</button>
+        </header>
+
+        <!-- CARDS -->
+        <section class="cards">
+
+          <div class="card">
+            <span>Total clientes</span>
+
+            <strong>58</strong>
+
+            <p>Clientes cadastrados</p>
+          </div>
+
+          <div class="card">
+            <span>Clientes ativos</span>
+
+            <strong>42</strong>
+
+            <p>Comprando regularmente</p>
+          </div>
+
+          <div class="card">
+            <span>Valor pendente</span>
+
+            <strong class="red">
+              R$ 1.240
+            </strong>
+
+            <p>Fiados pendentes</p>
+          </div>
+
+          <div class="card">
+            <span>Pagamentos hoje</span>
+
+            <strong class="green">
+              R$ 320
+            </strong>
+
+            <p>Recebimentos</p>
+          </div>
+
+        </section>
+
+        <!-- TABELA -->
+        <section class="panel">
+
+          <div class="filters">
+
+            <input
+              type="text"
+              placeholder="Buscar cliente..."
+            />
+
+            <select>
+              <option>Todos</option>
+            </select>
+
+            <button class="btn-light">
+              Exportar
+            </button>
+
+          </div>
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Telefone</th>
+                <th>Compras</th>
+                <th>Pendente</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr>
+                <td>
+                  João Silva
+                </td>
+
+                <td>
+                  (19) 99999-9999
+                </td>
+
+                <td>
+                  12 pedidos
+                </td>
+
+                <td class="red">
+                  R$ 180,00
+                </td>
+
+                <td class="orange">
+                  Pendente
+                </td>
+
+                <td>
+                  <button>Editar</button>
+
+                  <button>Excluir</button>
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </section>
+
+      </main>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>

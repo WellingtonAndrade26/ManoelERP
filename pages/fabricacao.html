@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fabricação | Artesanais do Manoel</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div>
+          <div class="brand">
+            <div class="logo">
+              <img src="../assets/logo.png" alt="Logo Artesanais do Manoel" />
+            </div>
+
+            <div>
+              <h1>Artesanais do Manoel</h1>
+              <p>Sistema de gerenciamento</p>
+            </div>
+          </div>
+
+          <nav class="menu">
+            <a href="../index.html"><button class="menu-btn">Resumo</button></a>
+            <a href="./materia-prima.html"><button class="menu-btn">Matéria-prima</button></a>
+            <a href="./produtos.html"><button class="menu-btn">Produtos</button></a>
+            <a href="./fabricacao.html"><button class="menu-btn active">Fabricação</button></a>
+            <a href="./receitas.html"><button class="menu-btn">Receitas</button></a>
+            <a href="./clientes.html"><button class="menu-btn">Clientes</button></a>
+            <a href="./vendas.html"><button class="menu-btn">Vendas</button></a>
+            <a href="./estoque.html"><button class="menu-btn">Estoque</button></a>
+            <a href="./relatorios.html"><button class="menu-btn">Relatórios</button></a>
+          </nav>
+        </div>
+
+        <div class="user">
+          <div class="avatar">M</div>
+          <div>
+            <strong>Manoel</strong>
+            <p>Administrador</p>
+          </div>
+          <button class="btn-light" id="sairSistema"> Sair </button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="top">
+          <div>
+            <h2>Fabricação</h2>
+            <p>Controle receitas, custos e produção dos produtos finais.</p>
+          </div>
+
+          <button class="btn-primary" id="abrirModalFabricacao">
+            + Nova fabricação
+          </button>
+        </header>
+
+        <section class="cards">
+          <div class="card">
+            <span>Produções</span>
+            <strong id="fabricacaoTotal">0</strong>
+            <p>Registros feitos</p>
+          </div>
+
+          <div class="card">
+            <span>Custo total</span>
+            <strong id="fabricacaoCusto">R$ 0</strong>
+            <p>Investido em produção</p>
+          </div>
+
+          <div class="card">
+            <span>Produzido</span>
+            <strong id="fabricacaoKg">0 kg</strong>
+            <p>Total fabricado</p>
+          </div>
+
+          <div class="card">
+            <span>Custo médio/kg</span>
+            <strong id="fabricacaoCustoKg">R$ 0</strong>
+            <p>Média de fabricação</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="filters">
+            <input type="text" placeholder="Buscar fabricação..." />
+
+            <select>
+              <option>Todos produtos</option>
+            </select>
+
+            <button class="btn-light">Exportar</button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Custo total</th>
+                <th>Custo/kg</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+
+            <tbody id="tabelaFabricacao"></tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal" id="modalFabricacao">
+      <div class="modal-content">
+        <h2>Nova Fabricação</h2>
+
+        <select id="fabricacaoReceita">
+  <option value="">Selecione a receita</option>
+</select>
+        <input type="number" id="fabricacaoQuantidade" placeholder="Quantidade produzida em kg" />
+        <input type="number" id="fabricacaoCustoTotal" placeholder="Custo total da fabricação" />
+        <input type="number" id="fabricacaoVendaKg" placeholder="Preço de venda por kg" />
+
+        <div class="modal-buttons">
+          <button id="salvarFabricacao" class="btn-primary">Salvar</button>
+          <button id="fecharModalFabricacao" class="btn-light">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../data/produtos.js"></script>
+<script src="../data/materiaPrima.js"></script>
+<script src="../data/fabricacoes.js"></script>
+<script src="../data/receitas.js"></script>
+<script src="../script.js"></script>
+  </body>
+</html>

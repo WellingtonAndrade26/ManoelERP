@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Produtos | Linguiçaria</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div>
+          <div class="brand">
+            <div class="logo">
+  <img src="../assets/logo.png" alt="Logo Artesanais do Manoel">
+</div>
+            <div>
+              <h1>Linguiçaria</h1>
+              <p>Sistema de gerenciamento</p>
+            </div>
+          </div>
+
+          <nav class="menu">
+            <a href="../index.html"><button class="menu-btn">Resumo</button></a>
+            <a href="./materia-prima.html"><button class="menu-btn">Matéria-prima</button></a>
+            <a href="./produtos.html"><button class="menu-btn active">Produtos</button></a>
+            <a href="./fabricacao.html"><button class="menu-btn">Fabricação</button></a>
+            <a href="./receitas.html"><button class="menu-btn">Receitas</button></a>
+            <a href="./clientes.html"><button class="menu-btn">Clientes</button></a>
+            <a href="./vendas.html"><button class="menu-btn">Vendas</button></a>
+            <a href="./estoque.html"><button class="menu-btn">Estoque</button></a>
+            <a href="./relatorios.html"><button class="menu-btn">Relatórios</button></a>
+          </nav>
+        </div>
+
+        <div class="user">
+          <div class="avatar">M</div>
+          <div>
+            <strong>Manoel</strong>
+            <p>Administrador</p>
+          </div>
+          <button class="btn-light" id="sairSistema"> Sair </button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="top">
+          <div>
+            <h2>Produtos</h2>
+            <p>Gerencie produtos, preços e custos.</p>
+          </div>
+
+          <button class="btn-primary" id="abrirModal">+ Novo produto</button>
+        </header>
+
+        <section class="cards">
+          <div class="card">
+            <span>Total produtos</span>
+            <strong id="totalProdutos">0</strong>
+            <p>Produtos cadastrados</p>
+          </div>
+
+          <div class="card">
+            <span>Valor estoque</span>
+            <strong id="valorEstoque">R$ 0</strong>
+            <p>Custo total</p>
+          </div>
+
+          <div class="card">
+            <span>Lucro estimado</span>
+            <strong id="lucroEstimado">R$ 0</strong>
+            <p>Valor previsto</p>
+          </div>
+
+          <div class="card">
+            <span>Baixo estoque</span>
+            <strong id="baixoEstoque">0</strong>
+            <p>Produtos em alerta</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="filters">
+            <input type="text" placeholder="Buscar produto..." />
+
+            <select>
+              <option>Todas categorias</option>
+            </select>
+
+            <button class="btn-light">Exportar</button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Categoria</th>
+                <th>Custo</th>
+                <th>Custo total</th>
+                <th>Venda</th>
+                <th>Estoque</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+
+            <tbody id="tabelaProdutos"></tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <h2>Novo Produto</h2>
+
+        <input type="text" id="nome" placeholder="Nome do produto" />
+        <input type="text" id="categoria" placeholder="Categoria" />
+        <input type="number" id="custo" placeholder="Custo unitário" />
+        <input type="number" id="venda" placeholder="Preço de venda" />
+        <input type="number" id="estoque" placeholder="Estoque" />
+
+        <div class="modal-buttons">
+          <button id="salvarProduto" class="btn-primary">Salvar</button>
+          <button id="fecharModal" class="btn-light">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../data/produtos.js"></script>
+    <script src="../script.js"></script>
+  </body>
+</html>

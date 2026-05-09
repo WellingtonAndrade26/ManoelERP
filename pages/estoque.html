@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estoque | Linguiçaria</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div>
+          <div class="brand">
+            <div class="logo">
+  <img src="../assets/logo.png" alt="Logo Artesanais do Manoel">
+</div>
+            <div>
+              <h1>Linguiçaria</h1>
+              <p>Sistema de gerenciamento</p>
+            </div>
+          </div>
+
+          <nav class="menu">
+            <a href="../index.html"><button class="menu-btn">Resumo</button></a>
+            <a href="./materia-prima.html"><button class="menu-btn">Matéria-prima</button></a>
+            <a href="./produtos.html"><button class="menu-btn">Produtos</button></a>
+            <a href="./fabricacao.html"><button class="menu-btn">Fabricação</button></a>
+            <a href="./receitas.html"><button class="menu-btn">Receitas</button></a>
+            <a href="./clientes.html"><button class="menu-btn">Clientes</button></a>
+            <a href="./vendas.html"><button class="menu-btn">Vendas</button></a>
+            <a href="./estoque.html"><button class="menu-btn active">Estoque</button></a>
+            <a href="./relatorios.html"><button class="menu-btn">Relatórios</button></a>
+          </nav>
+        </div>
+
+        <div class="user">
+          <div class="avatar">M</div>
+          <div>
+            <strong>Manoel</strong>
+            <p>Administrador</p>
+          </div>
+          <button class="btn-light" id="sairSistema"> Sair </button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="top">
+          <div>
+            <h2>Estoque</h2>
+            <p>Controle entradas, saídas e alertas de produtos.</p>
+          </div>
+
+          <button class="btn-primary">+ Entrada no estoque</button>
+        </header>
+
+        <section class="cards">
+          <div class="card">
+            <span>Itens em estoque</span>
+            <strong>142</strong>
+            <p>Total disponível</p>
+          </div>
+
+          <div class="card">
+            <span>Baixo estoque</span>
+            <strong class="red">5</strong>
+            <p>Precisam de reposição</p>
+          </div>
+
+          <div class="card">
+            <span>Entradas hoje</span>
+            <strong class="green">38</strong>
+            <p>Novos itens</p>
+          </div>
+
+          <div class="card">
+            <span>Saídas hoje</span>
+            <strong class="orange">21</strong>
+            <p>Produtos vendidos</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="filters">
+            <input type="text" placeholder="Buscar item..." />
+
+            <select>
+              <option>Todos status</option>
+              <option>Disponível</option>
+              <option>Baixo estoque</option>
+              <option>Esgotado</option>
+            </select>
+
+            <button class="btn-light">Exportar</button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Estoque atual</th>
+                <th>Estoque mínimo</th>
+                <th>Última entrada</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Linguiça Artesanal</td>
+                <td class="orange">25 kg</td>
+                <td>10 kg</td>
+                <td>08/05/2026</td>
+                <td class="green">Disponível</td>
+                <td>
+                  <button>Entrada</button>
+                  <button>Saída</button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Bacon Defumado</td>
+                <td class="red">4 kg</td>
+                <td>8 kg</td>
+                <td>07/05/2026</td>
+                <td class="red">Baixo estoque</td>
+                <td>
+                  <button>Entrada</button>
+                  <button>Saída</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>
