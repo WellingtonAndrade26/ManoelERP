@@ -1444,15 +1444,22 @@ function carregarRelatorios() {
   maisVendidoEl.innerText = maisVendido
 }
 
-const gerarRelatorio = document.getElementById("gerarRelatorio")
-const imprimirRelatorio = document.getElementById("imprimirRelatorio")
+document.addEventListener("DOMContentLoaded", () => {
+  const gerarRelatorio = document.getElementById("gerarRelatorio")
+  const imprimirRelatorio = document.getElementById("imprimirRelatorio")
 
-if (gerarRelatorio) {
-  gerarRelatorio.addEventListener("click", () => {
-    carregarRelatorios()
-    alert("Em breve será possível gerar relatórios personalizados.")
-  })
-}
+  if (gerarRelatorio) {
+    gerarRelatorio.addEventListener("click", () => {
+      carregarRelatorios()
+    })
+  }
+
+  if (imprimirRelatorio) {
+    imprimirRelatorio.addEventListener("click", () => {
+      window.print()
+    })
+  }
+})
 
 if (imprimirRelatorio) {
   imprimirRelatorio.addEventListener("click", () => {
@@ -1493,25 +1500,28 @@ carregarEstoque()
 atualizarDashboardClientes()
 carregarRelatorios()
 
-const toggleDark = document.getElementById("toggleDark")
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleDark = document.getElementById("toggleDark")
 
-if (localStorage.getItem("tema") === "dark") {
-  document.body.classList.add("dark")
-}
+  if (localStorage.getItem("tema") === "dark") {
+    document.body.classList.add("dark")
+    if (toggleDark) toggleDark.innerText = "☀️ Light mode"
+  }
 
-if (toggleDark) {
-  toggleDark.addEventListener("click", () => {
-    document.body.classList.toggle("dark")
+  if (toggleDark) {
+    toggleDark.addEventListener("click", () => {
+      document.body.classList.toggle("dark")
 
-    if (document.body.classList.contains("dark")) {
-      localStorage.setItem("tema", "dark")
-      toggleDark.innerText = "☀️ Light mode"
-    } else {
-      localStorage.setItem("tema", "light")
-      toggleDark.innerText = "🌙 Dark mode"
-    }
-  })
-}
+      if (document.body.classList.contains("dark")) {
+        localStorage.setItem("tema", "dark")
+        toggleDark.innerText = "☀️ Light mode"
+      } else {
+        localStorage.setItem("tema", "light")
+        toggleDark.innerText = "🌙 Dark mode"
+      }
+    })
+  }
+})
 
 if ("serviceWorker" in navigator) {
   const caminhoSW =
