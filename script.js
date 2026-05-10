@@ -1,11 +1,45 @@
-const estaNoLogin = window.location.pathname.includes("login.html");
+/* =====================================================
+   MANOELERP - SCRIPT.JS LIMPO E ORGANIZADO
+===================================================== */
+
+/* =========================
+   HELPERS
+========================= */
+
+function getStorage(chave, fallback = []) {
+  try {
+    const dados = localStorage.getItem(chave)
+    return dados ? JSON.parse(dados) : fallback
+  } catch (erro) {
+    console.warn(`Erro ao ler localStorage: ${chave}`, erro)
+    return fallback
+  }
+}
+
+function setStorage(chave, valor) {
+  localStorage.setItem(chave, JSON.stringify(valor))
+}
+
+function formatarMoeda(valor) {
+  return `R$ ${Number(valor || 0).toFixed(2)}`
+}
+
+function dataAtual() {
+  return new Date().toLocaleDateString("pt-BR")
+}
+
+/* =========================
+   LOGIN / SAIR
+========================= */
+
+const estaNoLogin = window.location.pathname.includes("login.html")
 
 if (!estaNoLogin && localStorage.getItem("logado") !== "sim") {
   const caminhoLogin = window.location.pathname.includes("/pages/")
     ? "../login.html"
-    : "./login.html";
+    : "./login.html"
 
-  window.location.href = caminhoLogin;
+  window.location.href = caminhoLogin
 }
 
 const sairSistema = document.getElementById("sairSistema")
@@ -22,16 +56,38 @@ if (sairSistema) {
   })
 }
 
+/* =========================
+   BASES SEGURAS
+========================= */
+
+const produtosBase = typeof produtos !== "undefined" ? produtos : []
+const vendasBase = typeof vendas !== "undefined" ? vendas : []
+const materiasBase = typeof materiasPrimas !== "undefined" ? materiasPrimas : []
+const fabricacoesBase = typeof fabricacoes !== "undefined" ? fabricacoes : []
+const receitasBase = typeof receitas !== "undefined" ? receitas : []
+const financeiroBase = typeof financeiro !== "undefined" ? financeiro : []
+
+let produtosSalvos = getStorage("produtos", produtosBase)
+let vendasSalvas = getStorage("vendas", vendasBase)
+let materiasSalvas = getStorage("materiasPrimas", materiasBase)
+let fabricacoesSalvas = getStorage("fabricacoes", fabricacoesBase)
+let receitasSalvas = getStorage("receitas", receitasBase)
+let clientesSalvos = getStorage("clientes", [])
+let financeiroSalvo = getStorage("financeiro", financeiroBase)
+let ingredientesReceita = []
+
+/* =========================
+   PRODUTOS
+========================= */
+
 const modal = document.getElementById("modal")
 const abrirModal = document.getElementById("abrirModal")
 const fecharModal = document.getElementById("fecharModal")
 const salvarProduto = document.getElementById("salvarProduto")
 const tabelaProdutos = document.getElementById("tabelaProdutos")
 
-let produtosSalvos = JSON.parse(localStorage.getItem("produtos")) || produtos
-
 function salvarLocalStorage() {
-  localStorage.setItem("produtos", JSON.stringify(produtosSalvos))
+  setStorage("produtos", produtosSalvos)
 }
 
 function carregarProdutos() {
@@ -49,9 +105,9 @@ function carregarProdutos() {
           <small>Código: ${produto.id}</small>
         </td>
         <td>${produto.categoria}</td>
-        <td>R$ ${produto.custo.toFixed(2)}</td>
-        <td>R$ ${custoTotal.toFixed(2)}</td>
-        <td class="green">R$ ${produto.venda.toFixed(2)}</td>
+        <td>${formatarMoeda(produto.custo)}</td>
+        <td>${formatarMoeda(custoTotal)}</td>
+        <td class="green">${formatarMoeda(produto.venda)}</td>
         <td class="orange">${produto.estoque} un.</td>
         <td>
           <button>Editar</button>
@@ -78,14 +134,12 @@ function atualizarDashboard() {
     valorEstoque += produto.custo * produto.estoque
     lucroEstimado += (produto.venda - produto.custo) * produto.estoque
 
-    if (produto.estoque <= 10) {
-      baixoEstoque++
-    }
+    if (produto.estoque <= 10) baixoEstoque++
   })
 
   totalProdutosEl.innerText = produtosSalvos.length
-  valorEstoqueEl.innerText = `R$ ${valorEstoque.toFixed(2)}`
-  lucroEstimadoEl.innerText = `R$ ${lucroEstimado.toFixed(2)}`
+  valorEstoqueEl.innerText = formatarMoeda(valorEstoque)
+  lucroEstimadoEl.innerText = formatarMoeda(lucroEstimado)
   baixoEstoqueEl.innerText = baixoEstoque
 }
 
@@ -109,64 +163,52 @@ function atualizarResumo() {
     estoque += produto.estoque
   })
 
-  faturamentoEl.innerText = `R$ ${faturamento.toFixed(2)}`
-  custosEl.innerText = `R$ ${custos.toFixed(2)}`
-  lucroEl.innerText = `R$ ${lucro.toFixed(2)}`
+  faturamentoEl.innerText = formatarMoeda(faturamento)
+  custosEl.innerText = formatarMoeda(custos)
+  lucroEl.innerText = formatarMoeda(lucro)
   estoqueEl.innerText = estoque
 }
 
 function excluirProduto(id) {
   produtosSalvos = produtosSalvos.filter((produto) => produto.id !== id)
-
   salvarLocalStorage()
   carregarProdutos()
   atualizarDashboard()
   atualizarResumo()
+  carregarProdutosNaVenda()
+  carregarProdutosEntrada()
+  carregarProdutosSaida()
+  carregarEstoque()
+  carregarAlertasDashboard()
 }
 
-if (abrirModal) {
-  abrirModal.addEventListener("click", () => {
-    modal.classList.add("active")
-  })
-}
-
-if (fecharModal) {
-  fecharModal.addEventListener("click", () => {
-    modal.classList.remove("active")
-  })
-}
+if (abrirModal) abrirModal.addEventListener("click", () => modal?.classList.add("active"))
+if (fecharModal) fecharModal.addEventListener("click", () => modal?.classList.remove("active"))
 
 if (salvarProduto) {
   salvarProduto.addEventListener("click", () => {
     const nome = document.getElementById("nome").value
     const categoria = document.getElementById("categoria").value
-    const custo = document.getElementById("custo").value
-    const venda = document.getElementById("venda").value
-    const estoque = document.getElementById("estoque").value
+    const custo = Number(document.getElementById("custo").value)
+    const venda = Number(document.getElementById("venda").value)
+    const estoque = Number(document.getElementById("estoque").value)
 
     if (!nome || !categoria || !custo || !venda || !estoque) {
       alert("Preencha todos os campos")
       return
     }
 
-    const novoProduto = {
-      id: Date.now(),
-      nome,
-      categoria,
-      custo: Number(custo),
-      venda: Number(venda),
-      estoque: Number(estoque),
-    }
-
-    produtosSalvos.push(novoProduto)
-
+    produtosSalvos.push({ id: Date.now(), nome, categoria, custo, venda, estoque })
     salvarLocalStorage()
     carregarProdutos()
     atualizarDashboard()
     atualizarResumo()
+    carregarProdutosNaVenda()
+    carregarProdutosEntrada()
+    carregarProdutosSaida()
+    carregarEstoque()
 
-    modal.classList.remove("active")
-
+    modal?.classList.remove("active")
     document.getElementById("nome").value = ""
     document.getElementById("categoria").value = ""
     document.getElementById("custo").value = ""
@@ -175,6 +217,10 @@ if (salvarProduto) {
   })
 }
 
+/* =========================
+   VENDAS / FIADO
+========================= */
+
 const modalVenda = document.getElementById("modalVenda")
 const abrirModalVenda = document.getElementById("abrirModalVenda")
 const fecharModalVenda = document.getElementById("fecharModalVenda")
@@ -182,21 +228,22 @@ const salvarVenda = document.getElementById("salvarVenda")
 const produtoVenda = document.getElementById("produtoVenda")
 const tabelaVendas = document.getElementById("tabelaVendas")
 
-let vendasSalvas = JSON.parse(localStorage.getItem("vendas")) || vendas
-
 function salvarVendasLocalStorage() {
-  localStorage.setItem("vendas", JSON.stringify(vendasSalvas))
+  setStorage("vendas", vendasSalvas)
+}
+
+function statusVenda(venda) {
+  return venda.status || (venda.pagamento === "Fiado" ? "Pendente" : "Pago")
 }
 
 function carregarProdutosNaVenda() {
   if (!produtoVenda) return
-
   produtoVenda.innerHTML = `<option value="">Selecione o produto</option>`
 
   produtosSalvos.forEach((produto) => {
     produtoVenda.innerHTML += `
       <option value="${produto.id}">
-        ${produto.nome} - R$ ${produto.venda.toFixed(2)}
+        ${produto.nome} - ${formatarMoeda(produto.venda)}
       </option>
     `
   })
@@ -204,32 +251,23 @@ function carregarProdutosNaVenda() {
 
 function carregarVendas() {
   if (!tabelaVendas) return
-
   tabelaVendas.innerHTML = ""
 
   vendasSalvas.forEach((venda) => {
+    const status = statusVenda(venda)
+
     tabelaVendas.innerHTML += `
       <tr>
         <td>${venda.cliente}</td>
         <td>${venda.produto}</td>
         <td>${venda.quantidade}</td>
         <td>${venda.pagamento}</td>
-        <td class="green">R$ ${venda.total.toFixed(2)}</td>
-        <td class="${venda.status === "Pendente" ? "orange" : "green"}">
-  ${venda.status || (venda.pagamento === "Fiado" ? "Pendente" : "Pago")}
-</td>
-
-<td>
-  ${
-    venda.status === "Pendente"
-      ? `<button onclick="window.receberFiado(${venda.id})">
-  Receber
-</button>`
-      : ""
-  }
-
-  <button onclick="excluirVenda(${venda.id})">Excluir</button>
-</td>
+        <td class="green">${formatarMoeda(venda.total)}</td>
+        <td class="${status === "Pendente" ? "orange" : "green"}">${status}</td>
+        <td>
+          ${status === "Pendente" ? `<button onclick="window.receberFiado(${venda.id})">Receber</button>` : ""}
+          <button onclick="excluirVenda(${venda.id})">Excluir</button>
+        </td>
       </tr>
     `
   })
@@ -239,20 +277,12 @@ function excluirVenda(id) {
   const venda = vendasSalvas.find((venda) => venda.id === id)
 
   if (venda) {
-    const produto = produtosSalvos.find(
-      (produto) => produto.id === venda.produtoId
-    )
-
-    if (produto) {
-      produto.estoque += venda.quantidade
-    }
+    const produto = produtosSalvos.find((produto) => produto.id === venda.produtoId)
+    if (produto) produto.estoque += venda.quantidade
   }
 
   vendasSalvas = vendasSalvas.filter((venda) => venda.id !== id)
-
-  financeiroSalvo = financeiroSalvo.filter(
-    (movimentacao) => movimentacao.vendaId !== id
-  )
+  financeiroSalvo = financeiroSalvo.filter((movimentacao) => movimentacao.vendaId !== id)
 
   salvarVendasLocalStorage()
   salvarFinanceiroLocalStorage()
@@ -266,6 +296,8 @@ function excluirVenda(id) {
   carregarFinanceiro()
   atualizarDashboardFinanceiro()
   carregarRelatorios()
+  carregarEstoque()
+  carregarAlertasDashboard()
 }
 
 window.receberFiado = function (id) {
@@ -276,24 +308,22 @@ window.receberFiado = function (id) {
     return
   }
 
-  if (venda.status === "Pago") {
+  if (statusVenda(venda) === "Pago") {
     alert("Essa venda já está paga")
     return
   }
 
   venda.status = "Pago"
 
-  const novaMovimentacao = {
+  financeiroSalvo.push({
     id: Date.now() + 30,
     vendaId: venda.id,
     descricao: `Recebimento fiado de ${venda.cliente}`,
     tipo: "Entrada",
     categoria: "Recebimento de fiado",
     valor: venda.total,
-    data: new Date().toLocaleDateString("pt-BR"),
-  }
-
-  financeiroSalvo.push(novaMovimentacao)
+    data: dataAtual(),
+  })
 
   salvarVendasLocalStorage()
   salvarFinanceiroLocalStorage()
@@ -311,15 +341,11 @@ window.receberFiado = function (id) {
 if (abrirModalVenda) {
   abrirModalVenda.addEventListener("click", () => {
     carregarProdutosNaVenda()
-    modalVenda.classList.add("active")
+    modalVenda?.classList.add("active")
   })
 }
 
-if (fecharModalVenda) {
-  fecharModalVenda.addEventListener("click", () => {
-    modalVenda.classList.remove("active")
-  })
-}
+if (fecharModalVenda) fecharModalVenda.addEventListener("click", () => modalVenda?.classList.remove("active"))
 
 if (salvarVenda) {
   salvarVenda.addEventListener("click", () => {
@@ -334,8 +360,10 @@ if (salvarVenda) {
     }
 
     const produto = produtosSalvos.find((item) => item.id === produtoId)
-
-    if (!produto) return
+    if (!produto) {
+      alert("Produto não encontrado")
+      return
+    }
 
     if (quantidade > produto.estoque) {
       alert("Estoque insuficiente para essa venda")
@@ -343,31 +371,37 @@ if (salvarVenda) {
     }
 
     const novaVenda = {
-  id: Date.now(),
-  cliente,
-  produto: produto.nome,
-  produtoId: produto.id,
-  quantidade,
-  pagamento,
-  total: produto.venda * quantidade,
-  lucro: (produto.venda - produto.custo) * quantidade,
-  status: pagamento === "Fiado" ? "Pendente" : "Pago",
-}
+      id: Date.now(),
+      cliente,
+      produto: produto.nome,
+      produtoId: produto.id,
+      quantidade,
+      pagamento,
+      total: produto.venda * quantidade,
+      lucro: (produto.venda - produto.custo) * quantidade,
+      status: pagamento === "Fiado" ? "Pendente" : "Pago",
+    }
 
     vendasSalvas.push(novaVenda)
-produto.estoque -= quantidade
+    produto.estoque -= quantidade
 
-registrarVendaNoFinanceiro(novaVenda)
+    registrarVendaNoFinanceiro(novaVenda)
 
     salvarVendasLocalStorage()
     salvarLocalStorage()
+
     carregarVendas()
     carregarProdutos()
     atualizarDashboard()
     atualizarResumo()
     atualizarDashboardVendas()
+    carregarEstoque()
+    carregarProdutosEntrada()
+    carregarProdutosSaida()
+    carregarRelatorios()
+    carregarAlertasDashboard()
 
-    modalVenda.classList.remove("active")
+    modalVenda?.classList.remove("active")
 
     document.getElementById("clienteVenda").value = ""
     document.getElementById("produtoVenda").value = ""
@@ -391,17 +425,18 @@ function atualizarDashboardVendas() {
   vendasSalvas.forEach((venda) => {
     total += venda.total
     lucro += venda.lucro
-
-    if (venda.status === "Pendente") {
-  fiado += venda.total
-}
+    if (statusVenda(venda) === "Pendente") fiado += venda.total
   })
 
-  vendasTotalEl.innerText = `R$ ${total.toFixed(2)}`
+  vendasTotalEl.innerText = formatarMoeda(total)
   vendasPedidosEl.innerText = vendasSalvas.length
-  vendasLucroEl.innerText = `R$ ${lucro.toFixed(2)}`
-  vendasFiadoEl.innerText = `R$ ${fiado.toFixed(2)}`
+  vendasLucroEl.innerText = formatarMoeda(lucro)
+  vendasFiadoEl.innerText = formatarMoeda(fiado)
 }
+
+/* =========================
+   MATÉRIA-PRIMA
+========================= */
 
 const modalMateria = document.getElementById("modalMateria")
 const abrirModalMateria = document.getElementById("abrirModalMateria")
@@ -409,15 +444,12 @@ const fecharModalMateria = document.getElementById("fecharModalMateria")
 const salvarMateria = document.getElementById("salvarMateria")
 const tabelaMateria = document.getElementById("tabelaMateria")
 
-let materiasSalvas = JSON.parse(localStorage.getItem("materiasPrimas")) || materiasPrimas
-
 function salvarMateriasLocalStorage() {
-  localStorage.setItem("materiasPrimas", JSON.stringify(materiasSalvas))
+  setStorage("materiasPrimas", materiasSalvas)
 }
 
 function carregarMaterias() {
   if (!tabelaMateria) return
-
   tabelaMateria.innerHTML = ""
 
   materiasSalvas.forEach((materia) => {
@@ -428,15 +460,13 @@ function carregarMaterias() {
         <td>${materia.nome}</td>
         <td>${materia.quantidade}</td>
         <td>${materia.unidade}</td>
-        <td>R$ ${materia.valorPago.toFixed(2)}</td>
-        <td>R$ ${custoUnidade.toFixed(2)}</td>
+        <td>${formatarMoeda(materia.valorPago)}</td>
+        <td>${formatarMoeda(custoUnidade)}</td>
         <td class="orange">${materia.estoque} ${materia.unidade}</td>
         <td class="${materia.estoque <= 2 ? "red" : "green"}">
           ${materia.estoque <= 2 ? "Baixo" : "Disponível"}
         </td>
-        <td>
-          <button onclick="excluirMateria(${materia.id})">Excluir</button>
-        </td>
+        <td><button onclick="excluirMateria(${materia.id})">Excluir</button></td>
       </tr>
     `
   })
@@ -455,54 +485,40 @@ function atualizarDashboardMateria() {
 
   materiasSalvas.forEach((materia) => {
     investido += materia.valorPago
-
-    if (materia.estoque <= 2) {
-      critico++
-    }
+    if (materia.estoque <= 2) critico++
   })
 
   const custoMedio = materiasSalvas.length ? investido / materiasSalvas.length : 0
 
   totalEl.innerText = materiasSalvas.length
-  investidoEl.innerText = `R$ ${investido.toFixed(2)}`
+  investidoEl.innerText = formatarMoeda(investido)
   criticoEl.innerText = critico
-  custoMedioEl.innerText = `R$ ${custoMedio.toFixed(2)}`
+  custoMedioEl.innerText = formatarMoeda(custoMedio)
 }
 
 function excluirMateria(id) {
   materiasSalvas = materiasSalvas.filter((materia) => materia.id !== id)
+  financeiroSalvo = financeiroSalvo.filter((movimentacao) => movimentacao.materiaId !== id)
 
-financeiroSalvo = financeiroSalvo.filter(
-  (movimentacao) => movimentacao.materiaId !== id
-)
+  salvarMateriasLocalStorage()
+  salvarFinanceiroLocalStorage()
 
-salvarMateriasLocalStorage()
-salvarFinanceiroLocalStorage()
-
-carregarMaterias()
-atualizarDashboardMateria()
-carregarFinanceiro()
-atualizarDashboardFinanceiro()
+  carregarMaterias()
+  atualizarDashboardMateria()
+  carregarFinanceiro()
+  atualizarDashboardFinanceiro()
+  carregarAlertasDashboard()
 }
 
-if (abrirModalMateria) {
-  abrirModalMateria.addEventListener("click", () => {
-    modalMateria.classList.add("active")
-  })
-}
-
-if (fecharModalMateria) {
-  fecharModalMateria.addEventListener("click", () => {
-    modalMateria.classList.remove("active")
-  })
-}
+if (abrirModalMateria) abrirModalMateria.addEventListener("click", () => modalMateria?.classList.add("active"))
+if (fecharModalMateria) fecharModalMateria.addEventListener("click", () => modalMateria?.classList.remove("active"))
 
 if (salvarMateria) {
   salvarMateria.addEventListener("click", () => {
     const nome = document.getElementById("materiaNome").value
     const quantidade = Number(document.getElementById("materiaQuantidade").value)
     const unidade = document.getElementById("materiaUnidade").value
-    const valorPago = Number(document.getElementById("materiaValorPago").value)
+        const valorPago = Number(document.getElementById("materiaValorPago").value)
     const estoque = Number(document.getElementById("materiaEstoque").value)
 
     if (!nome || !quantidade || !unidade || !valorPago || !estoque) {
@@ -521,27 +537,26 @@ if (salvarMateria) {
 
     materiasSalvas.push(novaMateria)
 
-const novaMovimentacao = {
-  id: Date.now() + 20,
-  materiaId: novaMateria.id,
-  descricao: `Compra de matéria-prima: ${novaMateria.nome}`,
-  tipo: "Saída",
-  categoria: "Matéria-prima",
-  valor: novaMateria.valorPago,
-  data: new Date().toLocaleDateString("pt-BR"),
-}
+    financeiroSalvo.push({
+      id: Date.now() + 20,
+      materiaId: novaMateria.id,
+      descricao: `Compra de matéria-prima: ${novaMateria.nome}`,
+      tipo: "Saída",
+      categoria: "Matéria-prima",
+      valor: novaMateria.valorPago,
+      data: dataAtual(),
+    })
 
-financeiroSalvo.push(novaMovimentacao)
+    salvarMateriasLocalStorage()
+    salvarFinanceiroLocalStorage()
 
-salvarMateriasLocalStorage()
-salvarFinanceiroLocalStorage()
+    carregarMaterias()
+    atualizarDashboardMateria()
+    carregarFinanceiro()
+    atualizarDashboardFinanceiro()
+    carregarAlertasDashboard()
 
-carregarMaterias()
-atualizarDashboardMateria()
-carregarFinanceiro()
-atualizarDashboardFinanceiro()
-
-    modalMateria.classList.remove("active")
+    modalMateria?.classList.remove("active")
 
     document.getElementById("materiaNome").value = ""
     document.getElementById("materiaQuantidade").value = ""
@@ -551,6 +566,10 @@ atualizarDashboardFinanceiro()
   })
 }
 
+/* =========================
+   FABRICAÇÃO
+========================= */
+
 const modalFabricacao = document.getElementById("modalFabricacao")
 const abrirModalFabricacao = document.getElementById("abrirModalFabricacao")
 const fecharModalFabricacao = document.getElementById("fecharModalFabricacao")
@@ -558,10 +577,8 @@ const salvarFabricacao = document.getElementById("salvarFabricacao")
 const fabricacaoReceita = document.getElementById("fabricacaoReceita")
 const tabelaFabricacao = document.getElementById("tabelaFabricacao")
 
-let fabricacoesSalvas = JSON.parse(localStorage.getItem("fabricacoes")) || fabricacoes
-
 function salvarFabricacoesLocalStorage() {
-  localStorage.setItem("fabricacoes", JSON.stringify(fabricacoesSalvas))
+  setStorage("fabricacoes", fabricacoesSalvas)
 }
 
 function carregarReceitasFabricacao() {
@@ -569,7 +586,7 @@ function carregarReceitasFabricacao() {
 
   fabricacaoReceita.innerHTML = `<option value="">Selecione a receita</option>`
 
-  receitas.forEach((receita) => {
+  receitasSalvas.forEach((receita) => {
     fabricacaoReceita.innerHTML += `
       <option value="${receita.id}">${receita.nome}</option>
     `
@@ -586,8 +603,8 @@ function carregarFabricacoes() {
       <tr>
         <td>${fabricacao.produto}</td>
         <td>${fabricacao.quantidade} kg</td>
-        <td>R$ ${fabricacao.custoTotal.toFixed(2)}</td>
-        <td>R$ ${fabricacao.custoKg.toFixed(2)}</td>
+        <td>${formatarMoeda(fabricacao.custoTotal)}</td>
+        <td>${formatarMoeda(fabricacao.custoKg)}</td>
         <td>${fabricacao.data}</td>
         <td>
           <button onclick="excluirFabricacao(${fabricacao.id})">Excluir</button>
@@ -616,13 +633,15 @@ function atualizarDashboardFabricacao() {
   const custoMedioKg = kgTotal ? custoTotal / kgTotal : 0
 
   totalEl.innerText = fabricacoesSalvas.length
-  custoEl.innerText = `R$ ${custoTotal.toFixed(2)}`
+  custoEl.innerText = formatarMoeda(custoTotal)
   kgEl.innerText = `${kgTotal} kg`
-  custoKgEl.innerText = `R$ ${custoMedioKg.toFixed(2)}`
+  custoKgEl.innerText = formatarMoeda(custoMedioKg)
 }
 
 function excluirFabricacao(id) {
-  fabricacoesSalvas = fabricacoesSalvas.filter((fabricacao) => fabricacao.id !== id)
+  fabricacoesSalvas = fabricacoesSalvas.filter(
+    (fabricacao) => fabricacao.id !== id
+  )
 
   salvarFabricacoesLocalStorage()
   carregarFabricacoes()
@@ -631,20 +650,21 @@ function excluirFabricacao(id) {
 
 if (abrirModalFabricacao) {
   abrirModalFabricacao.addEventListener("click", () => {
-    modalFabricacao.classList.add("active")
+    carregarReceitasFabricacao()
+    modalFabricacao?.classList.add("active")
   })
 }
 
 if (fecharModalFabricacao) {
   fecharModalFabricacao.addEventListener("click", () => {
-    modalFabricacao.classList.remove("active")
+    modalFabricacao?.classList.remove("active")
   })
 }
 
 if (salvarFabricacao) {
   salvarFabricacao.addEventListener("click", () => {
     const receitaId = Number(document.getElementById("fabricacaoReceita").value)
-    const receita = receitas.find((item) => item.id === receitaId)
+    const receita = receitasSalvas.find((item) => item.id === receitaId)
 
     if (!receita) {
       alert("Selecione uma receita")
@@ -653,18 +673,19 @@ if (salvarFabricacao) {
 
     const produto = receita.nome
     const quantidade = Number(document.getElementById("fabricacaoQuantidade").value)
-    const custoTotal = Number(document.getElementById("fabricacaoCustoTotal").value)
     const vendaKg = Number(document.getElementById("fabricacaoVendaKg").value)
 
-    if (!produto || !quantidade || !custoTotal || !vendaKg) {
-      alert("Preencha todos os campos")
+    if (!quantidade || !vendaKg) {
+      alert("Preencha quantidade e preço de venda")
       return
     }
 
     let custoCalculado = 0
 
     for (const ingrediente of receita.ingredientes) {
-      const materia = materiasSalvas.find((item) => item.id === ingrediente.materiaId)
+      const materia = materiasSalvas.find(
+        (item) => item.id === ingrediente.materiaId
+      )
 
       if (!materia) {
         alert(`Matéria-prima não encontrada: ${ingrediente.nome}`)
@@ -692,46 +713,58 @@ if (salvarFabricacao) {
       custoTotal: custoTotalReal,
       custoKg,
       vendaKg,
-      data: new Date().toLocaleDateString("pt-BR"),
+      data: dataAtual(),
     }
 
     fabricacoesSalvas.push(novaFabricacao)
 
     receita.ingredientes.forEach((ingrediente) => {
-      const materia = materiasSalvas.find((item) => item.id === ingrediente.materiaId)
+      const materia = materiasSalvas.find(
+        (item) => item.id === ingrediente.materiaId
+      )
+
       if (materia) {
         materia.estoque -= ingrediente.quantidade * quantidade
       }
     })
 
-    const produtoFinal = {
+    produtosSalvos.push({
       id: Date.now() + 1,
       nome: produto,
       categoria: "Produto final",
       custo: custoKg,
       venda: vendaKg,
       estoque: quantidade,
-    }
-
-    produtosSalvos.push(produtoFinal)
+    })
 
     salvarFabricacoesLocalStorage()
     salvarLocalStorage()
     salvarMateriasLocalStorage()
+
     carregarFabricacoes()
     atualizarDashboardFabricacao()
     carregarProdutos()
     atualizarDashboard()
     atualizarResumo()
+    carregarMaterias()
+    atualizarDashboardMateria()
+    carregarEstoque()
+    carregarAlertasDashboard()
 
-    modalFabricacao.classList.remove("active")
+    modalFabricacao?.classList.remove("active")
 
     document.getElementById("fabricacaoReceita").value = ""
     document.getElementById("fabricacaoQuantidade").value = ""
-    document.getElementById("fabricacaoCustoTotal").value = ""
     document.getElementById("fabricacaoVendaKg").value = ""
+
+    const custoTotalInput = document.getElementById("fabricacaoCustoTotal")
+    if (custoTotalInput) custoTotalInput.value = ""
   })
 }
+
+/* =========================
+   RECEITAS
+========================= */
 
 const modalReceita = document.getElementById("modalReceita")
 const abrirModalReceita = document.getElementById("abrirModalReceita")
@@ -742,11 +775,8 @@ const adicionarIngrediente = document.getElementById("adicionarIngrediente")
 const listaIngredientes = document.getElementById("listaIngredientes")
 const tabelaReceitas = document.getElementById("tabelaReceitas")
 
-let receitasSalvas = JSON.parse(localStorage.getItem("receitas")) || receitas
-let ingredientesReceita = []
-
 function salvarReceitasLocalStorage() {
-  localStorage.setItem("receitas", JSON.stringify(receitasSalvas))
+  setStorage("receitas", receitasSalvas)
 }
 
 function carregarMateriasReceita() {
@@ -773,6 +803,7 @@ function renderizarIngredientes() {
           <strong>${ingrediente.nome}</strong>
           <span>${ingrediente.quantidade} ${ingrediente.unidade}</span>
         </div>
+
         <button onclick="removerIngrediente(${index})">X</button>
       </div>
     `
@@ -787,13 +818,13 @@ function removerIngrediente(index) {
 if (abrirModalReceita) {
   abrirModalReceita.addEventListener("click", () => {
     carregarMateriasReceita()
-    modalReceita.classList.add("active")
+    modalReceita?.classList.add("active")
   })
 }
 
 if (fecharModalReceita) {
   fecharModalReceita.addEventListener("click", () => {
-    modalReceita.classList.remove("active")
+    modalReceita?.classList.remove("active")
   })
 }
 
@@ -843,8 +874,8 @@ function carregarReceitas() {
         <td>${receita.nome}</td>
         <td>${receita.rendimentoKg} kg</td>
         <td>${receita.ingredientes.length}</td>
-        <td>R$ ${custoTotal.toFixed(2)}</td>
-        <td class="green">R$ ${custoKg.toFixed(2)}</td>
+        <td>${formatarMoeda(custoTotal)}</td>
+        <td class="green">${formatarMoeda(custoKg)}</td>
         <td>
           <button onclick="excluirReceita(${receita.id})">Excluir</button>
         </td>
@@ -874,17 +905,15 @@ function atualizarDashboardReceitas() {
     custoTotal += custo
     ingredientesTotal += receita.ingredientes.length
 
-    if (custo > maiorCusto) {
-      maiorCusto = custo
-    }
+    if (custo > maiorCusto) maiorCusto = custo
   })
 
   const custoMedio = receitasSalvas.length ? custoTotal / receitasSalvas.length : 0
 
   totalEl.innerText = receitasSalvas.length
-  custoMedioEl.innerText = `R$ ${custoMedio.toFixed(2)}`
+  custoMedioEl.innerText = formatarMoeda(custoMedio)
   ingredientesEl.innerText = ingredientesTotal
-  maiorCustoEl.innerText = `R$ ${maiorCusto.toFixed(2)}`
+  maiorCustoEl.innerText = formatarMoeda(maiorCusto)
 }
 
 function excluirReceita(id) {
@@ -893,6 +922,7 @@ function excluirReceita(id) {
   salvarReceitasLocalStorage()
   carregarReceitas()
   atualizarDashboardReceitas()
+  carregarReceitasFabricacao()
 }
 
 if (salvarReceita) {
@@ -910,20 +940,19 @@ if (salvarReceita) {
       return
     }
 
-    const novaReceita = {
+    receitasSalvas.push({
       id: Date.now(),
       nome,
       rendimentoKg,
       ingredientes: ingredientesReceita,
-    }
-
-    receitasSalvas.push(novaReceita)
+    })
 
     salvarReceitasLocalStorage()
     carregarReceitas()
     atualizarDashboardReceitas()
+    carregarReceitasFabricacao()
 
-    modalReceita.classList.remove("active")
+    modalReceita?.classList.remove("active")
 
     document.getElementById("receitaNome").value = ""
     document.getElementById("receitaRendimento").value = ""
@@ -932,90 +961,16 @@ if (salvarReceita) {
   })
 }
 
-function carregarGraficosDashboard() {
-  const graficoVendas = document.getElementById("graficoVendas")
-  const graficoEstoque = document.getElementById("graficoEstoque")
-
-  if (!graficoVendas || !graficoEstoque) return
-  if (typeof Chart === "undefined") return
-
-  const totalVendas = vendasSalvas.reduce((total, venda) => total + venda.total, 0)
-  const totalLucro = vendasSalvas.reduce((total, venda) => total + venda.lucro, 0)
-
-  new Chart(graficoVendas, {
-    type: "bar",
-    options: { responsive: true, maintainAspectRatio: false },
-    data: {
-      labels: ["Faturamento", "Lucro"],
-      datasets: [{ label: "Valores em R$", data: [totalVendas, totalLucro] }],
-    },
-  })
-
-  new Chart(graficoEstoque, {
-    type: "doughnut",
-    options: { responsive: true, maintainAspectRatio: false },
-    data: {
-      labels: produtosSalvos.map((produto) => produto.nome),
-      datasets: [{ label: "Estoque", data: produtosSalvos.map((produto) => produto.estoque) }],
-    },
-  })
-}
-
-function carregarAlertasDashboard() {
-  const listaAlertas = document.getElementById("listaAlertas")
-
-  if (!listaAlertas) return
-
-  listaAlertas.innerHTML = ""
-
-  let alertas = []
-
-  produtosSalvos.forEach((produto) => {
-    if (produto.estoque <= 5) {
-      alertas.push({
-        texto: `Estoque baixo: ${produto.nome} com ${produto.estoque} un.`,
-        tipo: "red",
-      })
-    }
-  })
-
-  materiasSalvas.forEach((materia) => {
-    if (materia.estoque <= 2) {
-      alertas.push({
-        texto: `Matéria-prima baixa: ${materia.nome} com ${materia.estoque} ${materia.unidade}.`,
-        tipo: "red",
-      })
-    }
-  })
-
-  const fiados = vendasSalvas.filter((venda) => venda.status === "Pendente")
-
-  if (fiados.length > 0) {
-    alertas.push({
-      texto: `Existem ${fiados.length} venda(s) fiado pendente(s).`,
-      tipo: "orange",
-    })
-  }
-
-  if (alertas.length === 0) {
-    alertas.push({
-      texto: "Tudo certo por enquanto. Nenhum alerta importante.",
-      tipo: "green",
-    })
-  }
-
-  alertas.forEach((alerta) => {
-    listaAlertas.innerHTML += `
-      <div class="alert-item ${alerta.tipo}">${alerta.texto}</div>
-    `
-  })
-}
+/* =========================
+   ESTOQUE
+========================= */
 
 const modalEntrada = document.getElementById("modalEntrada")
 const abrirModalEntrada = document.getElementById("abrirModalEntrada")
 const fecharModalEntrada = document.getElementById("fecharModalEntrada")
 const salvarEntrada = document.getElementById("salvarEntrada")
 const produtoEntrada = document.getElementById("produtoEntrada")
+const tabelaEstoque = document.getElementById("tabelaEstoque")
 
 function carregarProdutosEntrada() {
   if (!produtoEntrada) return
@@ -1031,16 +986,50 @@ function carregarProdutosEntrada() {
   })
 }
 
+function carregarEstoque() {
+  if (!tabelaEstoque) return
+
+  tabelaEstoque.innerHTML = ""
+
+  produtosSalvos.forEach((produto) => {
+    tabelaEstoque.innerHTML += `
+      <tr>
+        <td>${produto.nome}</td>
+        <td class="${produto.estoque <= 5 ? "red" : "orange"}">
+          ${produto.estoque} un.
+        </td>
+        <td>10</td>
+        <td>${dataAtual()}</td>
+        <td class="${produto.estoque <= 5 ? "red" : "green"}">
+          ${produto.estoque <= 5 ? "Baixo estoque" : "Disponível"}
+        </td>
+        <td>
+          <button onclick="abrirEntradaRapida(${produto.id})">Entrada</button>
+          <button onclick="abrirSaidaRapida(${produto.id})">Saída</button>
+        </td>
+      </tr>
+    `
+  })
+}
+
+function abrirEntradaRapida(id) {
+  carregarProdutosEntrada()
+
+  if (produtoEntrada) produtoEntrada.value = id
+
+  modalEntrada?.classList.add("active")
+}
+
 if (abrirModalEntrada) {
   abrirModalEntrada.addEventListener("click", () => {
     carregarProdutosEntrada()
-    modalEntrada.classList.add("active")
+    modalEntrada?.classList.add("active")
   })
 }
 
 if (fecharModalEntrada) {
   fecharModalEntrada.addEventListener("click", () => {
-    modalEntrada.classList.remove("active")
+    modalEntrada?.classList.remove("active")
   })
 }
 
@@ -1060,54 +1049,20 @@ if (salvarEntrada) {
     produto.estoque += quantidade
 
     salvarLocalStorage()
+
     carregarProdutos()
     carregarEstoque()
     atualizarDashboard()
     atualizarResumo()
     carregarProdutosEntrada()
     carregarProdutosSaida()
-    carregarGraficosDashboard()
     carregarAlertasDashboard()
 
-    modalEntrada.classList.remove("active")
+    modalEntrada?.classList.remove("active")
 
     produtoEntrada.value = ""
     document.getElementById("quantidadeEntrada").value = ""
   })
-}
-
-const tabelaEstoque = document.getElementById("tabelaEstoque")
-
-function carregarEstoque() {
-  if (!tabelaEstoque) return
-
-  tabelaEstoque.innerHTML = ""
-
-  produtosSalvos.forEach((produto) => {
-    tabelaEstoque.innerHTML += `
-      <tr>
-        <td>${produto.nome}</td>
-        <td class="${produto.estoque <= 5 ? "red" : "orange"}">
-          ${produto.estoque} un.
-        </td>
-        <td>10</td>
-        <td>${new Date().toLocaleDateString("pt-BR")}</td>
-        <td class="${produto.estoque <= 5 ? "red" : "green"}">
-          ${produto.estoque <= 5 ? "Baixo estoque" : "Disponível"}
-        </td>
-        <td>
-          <button onclick="abrirEntradaRapida(${produto.id})">Entrada</button>
-          <button onclick="abrirSaidaRapida(${produto.id})">Saída</button>
-        </td>
-      </tr>
-    `
-  })
-}
-
-function abrirEntradaRapida(id) {
-  carregarProdutosEntrada()
-  produtoEntrada.value = id
-  modalEntrada.classList.add("active")
 }
 
 const modalSaida = document.getElementById("modalSaida")
@@ -1131,13 +1086,15 @@ function carregarProdutosSaida() {
 
 function abrirSaidaRapida(id) {
   carregarProdutosSaida()
-  produtoSaida.value = id
-  modalSaida.classList.add("active")
+
+  if (produtoSaida) produtoSaida.value = id
+
+  modalSaida?.classList.add("active")
 }
 
 if (fecharModalSaida) {
   fecharModalSaida.addEventListener("click", () => {
-    modalSaida.classList.remove("active")
+    modalSaida?.classList.remove("active")
   })
 }
 
@@ -1162,19 +1119,25 @@ if (salvarSaida) {
     produto.estoque -= quantidade
 
     salvarLocalStorage()
+
     carregarProdutos()
     carregarEstoque()
     atualizarDashboard()
     atualizarResumo()
     carregarProdutosEntrada()
     carregarProdutosSaida()
+    carregarAlertasDashboard()
 
-    modalSaida.classList.remove("active")
+    modalSaida?.classList.remove("active")
 
     produtoSaida.value = ""
     document.getElementById("quantidadeSaida").value = ""
   })
 }
+
+/* =========================
+   CLIENTES
+========================= */
 
 const modalCliente = document.getElementById("modalCliente")
 const abrirModalCliente = document.getElementById("abrirModalCliente")
@@ -1182,10 +1145,8 @@ const fecharModalCliente = document.getElementById("fecharModalCliente")
 const salvarCliente = document.getElementById("salvarCliente")
 const tabelaClientes = document.getElementById("tabelaClientes")
 
-let clientesSalvos = JSON.parse(localStorage.getItem("clientes")) || []
-
 function salvarClientesLocalStorage() {
-  localStorage.setItem("clientes", JSON.stringify(clientesSalvos))
+  setStorage("clientes", clientesSalvos)
 }
 
 function carregarClientes() {
@@ -1198,8 +1159,8 @@ function carregarClientes() {
       <tr>
         <td>${cliente.nome}</td>
         <td>${cliente.telefone}</td>
-        <td>${cliente.endereco}</td>
-        <td>${cliente.observacao}</td>
+        <td>${cliente.endereco || "-"}</td>
+        <td>${cliente.observacao || "-"}</td>
         <td class="green">Ativo</td>
         <td>
           <button onclick="excluirCliente(${cliente.id})">Excluir</button>
@@ -1217,10 +1178,14 @@ function atualizarDashboardClientes() {
 
   if (!totalEl) return
 
+  const fiadosPendentes = vendasSalvas
+    .filter((venda) => statusVenda(venda) === "Pendente")
+    .reduce((total, venda) => total + venda.total, 0)
+
   totalEl.innerText = clientesSalvos.length
   ativosEl.innerText = clientesSalvos.length
-  pendentesEl.innerText = "R$ 0"
-  recebimentosEl.innerText = "R$ 0"
+  pendentesEl.innerText = formatarMoeda(fiadosPendentes)
+  recebimentosEl.innerText = formatarMoeda(0)
 }
 
 function excluirCliente(id) {
@@ -1228,17 +1193,18 @@ function excluirCliente(id) {
 
   salvarClientesLocalStorage()
   carregarClientes()
+  atualizarDashboardClientes()
 }
 
 if (abrirModalCliente) {
   abrirModalCliente.addEventListener("click", () => {
-    modalCliente.classList.add("active")
+    modalCliente?.classList.add("active")
   })
 }
 
 if (fecharModalCliente) {
   fecharModalCliente.addEventListener("click", () => {
-    modalCliente.classList.remove("active")
+    modalCliente?.classList.remove("active")
   })
 }
 
@@ -1254,21 +1220,19 @@ if (salvarCliente) {
       return
     }
 
-    const novoCliente = {
+    clientesSalvos.push({
       id: Date.now(),
       nome,
       telefone,
       endereco,
       observacao,
-    }
-
-    clientesSalvos.push(novoCliente)
+    })
 
     salvarClientesLocalStorage()
     carregarClientes()
     atualizarDashboardClientes()
 
-    modalCliente.classList.remove("active")
+    modalCliente?.classList.remove("active")
 
     document.getElementById("clienteNome").value = ""
     document.getElementById("clienteTelefone").value = ""
@@ -1277,7 +1241,168 @@ if (salvarCliente) {
   })
 }
 
+/* =========================
+   FINANCEIRO
+========================= */
+
+const modalFinanceiro = document.getElementById("modalFinanceiro")
+const abrirModalFinanceiro = document.getElementById("abrirModalFinanceiro")
+const fecharModalFinanceiro = document.getElementById("fecharModalFinanceiro")
+const salvarFinanceiro = document.getElementById("salvarFinanceiro")
+const tabelaFinanceiro = document.getElementById("tabelaFinanceiro")
+
+function salvarFinanceiroLocalStorage() {
+  setStorage("financeiro", financeiroSalvo)
+}
+
+function registrarVendaNoFinanceiro(venda) {
+  if (venda.pagamento === "Fiado") return
+
+  financeiroSalvo.push({
+    id: Date.now() + 10,
+    vendaId: venda.id,
+    descricao: `Venda para ${venda.cliente}`,
+    tipo: "Entrada",
+    categoria: `Venda - ${venda.pagamento}`,
+    valor: venda.total,
+    data: dataAtual(),
+  })
+
+  salvarFinanceiroLocalStorage()
+  carregarFinanceiro()
+  atualizarDashboardFinanceiro()
+}
+
+function carregarFinanceiro() {
+  if (!tabelaFinanceiro) return
+
+  tabelaFinanceiro.innerHTML = ""
+
+  financeiroSalvo.forEach((movimentacao) => {
+    tabelaFinanceiro.innerHTML += `
+      <tr>
+        <td>${movimentacao.descricao}</td>
+
+        <td class="${movimentacao.tipo === "Entrada" ? "green" : "red"}">
+          ${movimentacao.tipo}
+        </td>
+
+        <td>${movimentacao.categoria}</td>
+
+        <td class="${movimentacao.tipo === "Entrada" ? "green" : "red"}">
+          ${formatarMoeda(movimentacao.valor)}
+        </td>
+
+        <td>${movimentacao.data}</td>
+
+        <td>
+          <button onclick="excluirFinanceiro(${movimentacao.id})">Excluir</button>
+        </td>
+      </tr>
+    `
+  })
+}
+
+function atualizarDashboardFinanceiro() {
+  const entradasEl = document.getElementById("financeiroEntradas")
+  const saidasEl = document.getElementById("financeiroSaidas")
+  const saldoEl = document.getElementById("financeiroSaldo")
+  const totalEl = document.getElementById("financeiroTotal")
+
+  if (!entradasEl) return
+
+  let entradas = 0
+  let saidas = 0
+
+  financeiroSalvo.forEach((movimentacao) => {
+    if (movimentacao.tipo === "Entrada") {
+      entradas += movimentacao.valor
+    } else {
+      saidas += movimentacao.valor
+    }
+  })
+
+  const saldo = entradas - saidas
+
+  entradasEl.innerText = formatarMoeda(entradas)
+  saidasEl.innerText = formatarMoeda(saidas)
+  saldoEl.innerText = formatarMoeda(saldo)
+  totalEl.innerText = financeiroSalvo.length
+
+  if (saldo < 0) {
+    saldoEl.classList.add("red")
+    saldoEl.classList.remove("green")
+  } else {
+    saldoEl.classList.add("green")
+    saldoEl.classList.remove("red")
+  }
+}
+
+function excluirFinanceiro(id) {
+  financeiroSalvo = financeiroSalvo.filter(
+    (movimentacao) => movimentacao.id !== id
+  )
+
+  salvarFinanceiroLocalStorage()
+  carregarFinanceiro()
+  atualizarDashboardFinanceiro()
+  carregarRelatorios()
+}
+
+if (abrirModalFinanceiro) {
+  abrirModalFinanceiro.addEventListener("click", () => {
+    modalFinanceiro?.classList.add("active")
+  })
+}
+
+if (fecharModalFinanceiro) {
+  fecharModalFinanceiro.addEventListener("click", () => {
+    modalFinanceiro?.classList.remove("active")
+  })
+}
+
+if (salvarFinanceiro) {
+  salvarFinanceiro.addEventListener("click", () => {
+    const descricao = document.getElementById("financeiroDescricao").value
+    const tipo = document.getElementById("financeiroTipo").value
+    const categoria = document.getElementById("financeiroCategoria").value
+    const valor = Number(document.getElementById("financeiroValor").value)
+
+    if (!descricao || !tipo || !categoria || !valor) {
+      alert("Preencha todos os campos")
+      return
+    }
+
+    financeiroSalvo.push({
+      id: Date.now(),
+      descricao,
+      tipo,
+      categoria,
+      valor,
+      data: dataAtual(),
+    })
+
+    salvarFinanceiroLocalStorage()
+    carregarFinanceiro()
+    atualizarDashboardFinanceiro()
+    carregarRelatorios()
+
+    modalFinanceiro?.classList.remove("active")
+
+    document.getElementById("financeiroDescricao").value = ""
+    document.getElementById("financeiroTipo").value = ""
+    document.getElementById("financeiroCategoria").value = ""
+    document.getElementById("financeiroValor").value = ""
+  })
+}
+
+/* =========================
+   RELATÓRIOS
+========================= */
+
 const tabelaRelatorios = document.getElementById("tabelaRelatorios")
+const gerarRelatorio = document.getElementById("gerarRelatorio")
+const imprimirRelatorio = document.getElementById("imprimirRelatorio")
 
 function carregarRelatorios() {
   if (!tabelaRelatorios) return
@@ -1309,14 +1434,14 @@ function carregarRelatorios() {
         <td>${venda.produto}</td>
         <td>${venda.quantidade}</td>
         <td>${venda.pagamento}</td>
-        <td class="green">R$ ${venda.total.toFixed(2)}</td>
-        <td>${venda.pagamento === "Fiado" ? "Pendente" : "Pago"}</td>
+        <td class="green">${formatarMoeda(venda.total)}</td>
+        <td>${statusVenda(venda)}</td>
       </tr>
     `
   })
 
-  if (faturamentoEl) faturamentoEl.innerText = `R$ ${faturamento.toFixed(2)}`
-  if (lucroEl) lucroEl.innerText = `R$ ${lucro.toFixed(2)}`
+  if (faturamentoEl) faturamentoEl.innerText = formatarMoeda(faturamento)
+  if (lucroEl) lucroEl.innerText = formatarMoeda(lucro)
   if (pedidosEl) pedidosEl.innerText = vendasSalvas.length
 
   let maisVendido = "Nenhum"
@@ -1332,9 +1457,6 @@ function carregarRelatorios() {
   if (maisVendidoEl) maisVendidoEl.innerText = maisVendido
 }
 
-const gerarRelatorio = document.getElementById("gerarRelatorio")
-const imprimirRelatorio = document.getElementById("imprimirRelatorio")
-
 if (gerarRelatorio) {
   gerarRelatorio.addEventListener("click", () => {
     carregarRelatorios()
@@ -1346,6 +1468,126 @@ if (imprimirRelatorio) {
     window.print()
   })
 }
+
+/* =========================
+   GRÁFICOS / ALERTAS
+========================= */
+
+let graficoVendasInstancia = null
+let graficoEstoqueInstancia = null
+
+function carregarGraficosDashboard() {
+  const graficoVendas = document.getElementById("graficoVendas")
+  const graficoEstoque = document.getElementById("graficoEstoque")
+
+  if (!graficoVendas || !graficoEstoque) return
+  if (typeof Chart === "undefined") return
+
+  if (graficoVendasInstancia) graficoVendasInstancia.destroy()
+  if (graficoEstoqueInstancia) graficoEstoqueInstancia.destroy()
+
+  const totalVendas = vendasSalvas.reduce(
+    (total, venda) => total + venda.total,
+    0
+  )
+
+  const totalLucro = vendasSalvas.reduce(
+    (total, venda) => total + venda.lucro,
+    0
+  )
+
+  graficoVendasInstancia = new Chart(graficoVendas, {
+    type: "bar",
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+    },
+    data: {
+      labels: ["Faturamento", "Lucro"],
+      datasets: [
+        {
+          label: "Valores em R$",
+          data: [totalVendas, totalLucro],
+        },
+      ],
+    },
+  })
+
+  graficoEstoqueInstancia = new Chart(graficoEstoque, {
+    type: "doughnut",
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+    },
+    data: {
+      labels: produtosSalvos.map((produto) => produto.nome),
+      datasets: [
+        {
+          label: "Estoque",
+          data: produtosSalvos.map((produto) => produto.estoque),
+        },
+      ],
+    },
+  })
+}
+
+function carregarAlertasDashboard() {
+  const listaAlertas = document.getElementById("listaAlertas")
+
+  if (!listaAlertas) return
+
+  listaAlertas.innerHTML = ""
+
+  const alertas = []
+
+  produtosSalvos.forEach((produto) => {
+    if (produto.estoque <= 5) {
+      alertas.push({
+        texto: `Estoque baixo: ${produto.nome} com ${produto.estoque} un.`,
+        tipo: "red",
+      })
+    }
+  })
+
+  materiasSalvas.forEach((materia) => {
+    if (materia.estoque <= 2) {
+      alertas.push({
+        texto: `Matéria-prima baixa: ${materia.nome} com ${materia.estoque} ${materia.unidade}.`,
+        tipo: "red",
+      })
+    }
+  })
+
+  const fiados = vendasSalvas.filter(
+    (venda) => statusVenda(venda) === "Pendente"
+  )
+
+  if (fiados.length > 0) {
+    alertas.push({
+      texto: `Existem ${fiados.length} venda(s) fiado pendente(s).`,
+      tipo: "orange",
+    })
+  }
+
+  if (alertas.length === 0) {
+    alertas.push({
+      texto: "Tudo certo por enquanto. Nenhum alerta importante.",
+      tipo: "green",
+    })
+  }
+
+  alertas.forEach((alerta) => {
+    listaAlertas.innerHTML += `
+      <div class="alert-item ${alerta.tipo}">
+        ${alerta.texto}
+      </div>
+    `
+  })
+}
+
+/* =========================
+   DARK MODE
+========================= */
 
 const toggleDark = document.getElementById("toggleDark")
 
@@ -1368,8 +1610,7 @@ aplicarTextoDarkMode()
 
 if (toggleDark) {
   toggleDark.addEventListener("click", () => {
-    const darkAtivo =
-      !document.documentElement.classList.contains("dark")
+    const darkAtivo = !document.documentElement.classList.contains("dark")
 
     document.documentElement.classList.toggle("dark", darkAtivo)
     document.body.classList.toggle("dark", darkAtivo)
@@ -1380,207 +1621,9 @@ if (toggleDark) {
   })
 }
 
-const modalFinanceiro = document.getElementById("modalFinanceiro")
-const abrirModalFinanceiro = document.getElementById("abrirModalFinanceiro")
-const fecharModalFinanceiro = document.getElementById("fecharModalFinanceiro")
-const salvarFinanceiro = document.getElementById("salvarFinanceiro")
-const tabelaFinanceiro = document.getElementById("tabelaFinanceiro")
-
-const financeiroBase =
-  typeof financeiro !== "undefined" ? financeiro : []
-
-let financeiroSalvo =
-  JSON.parse(localStorage.getItem("financeiro")) || financeiroBase
-
-function salvarFinanceiroLocalStorage() {
-  localStorage.setItem("financeiro", JSON.stringify(financeiroSalvo))
-}
-
-function registrarVendaNoFinanceiro(venda) {
-  if (venda.pagamento === "Fiado") return
-
-  const novaMovimentacao = {
-    id: Date.now() + 10,
-    vendaId: venda.id,
-    descricao: `Venda para ${venda.cliente}`,
-    tipo: "Entrada",
-    categoria: `Venda - ${venda.pagamento}`,
-    valor: venda.total,
-    data: new Date().toLocaleDateString("pt-BR"),
-  }
-
-  financeiroSalvo.push(novaMovimentacao)
-
-  salvarFinanceiroLocalStorage()
-  carregarFinanceiro()
-  atualizarDashboardFinanceiro()
-}
-
-function carregarFinanceiro() {
-  if (!tabelaFinanceiro) return
-
-  tabelaFinanceiro.innerHTML = ""
-
-  financeiroSalvo.forEach((movimentacao) => {
-    tabelaFinanceiro.innerHTML += `
-      <tr>
-        <td>${movimentacao.descricao}</td>
-
-        <td class="${movimentacao.tipo === "Entrada" ? "green" : "red"}">
-          ${movimentacao.tipo}
-        </td>
-
-        <td>${movimentacao.categoria}</td>
-
-        <td class="${movimentacao.tipo === "Entrada" ? "green" : "red"}">
-          R$ ${movimentacao.valor.toFixed(2)}
-        </td>
-
-        <td>${movimentacao.data}</td>
-
-        <td>
-          <button onclick="excluirFinanceiro(${movimentacao.id})">
-            Excluir
-          </button>
-        </td>
-      </tr>
-    `
-  })
-}
-
-function atualizarDashboardFinanceiro() {
-  const entradasEl = document.getElementById("financeiroEntradas")
-  const saidasEl = document.getElementById("financeiroSaidas")
-  const saldoEl = document.getElementById("financeiroSaldo")
-  const totalEl = document.getElementById("financeiroTotal")
-
-  if (!entradasEl) return
-
-  let entradas = 0
-  let saidas = 0
-
-  financeiroSalvo.forEach((movimentacao) => {
-    if (movimentacao.tipo === "Entrada") {
-      entradas += movimentacao.valor
-    } else {
-      saidas += movimentacao.valor
-    }
-  })
-
-  const saldo = entradas - saidas
-
-  entradasEl.innerText = `R$ ${entradas.toFixed(2)}`
-  saidasEl.innerText = `R$ ${saidas.toFixed(2)}`
-  saldoEl.innerText = `R$ ${saldo.toFixed(2)}`
-  totalEl.innerText = financeiroSalvo.length
-
-  if (saldo < 0) {
-    saldoEl.classList.add("red")
-    saldoEl.classList.remove("green")
-  } else {
-    saldoEl.classList.add("green")
-    saldoEl.classList.remove("red")
-  }
-}
-
-function excluirFinanceiro(id) {
-  financeiroSalvo = financeiroSalvo.filter(
-    (movimentacao) => movimentacao.id !== id
-  )
-
-  salvarFinanceiroLocalStorage()
-  carregarFinanceiro()
-  atualizarDashboardFinanceiro()
-}
-
-if (abrirModalFinanceiro) {
-  abrirModalFinanceiro.addEventListener("click", () => {
-    modalFinanceiro.classList.add("active")
-  })
-}
-
-if (fecharModalFinanceiro) {
-  fecharModalFinanceiro.addEventListener("click", () => {
-    modalFinanceiro.classList.remove("active")
-  })
-}
-
-if (salvarFinanceiro) {
-  salvarFinanceiro.addEventListener("click", () => {
-    const descricao = document.getElementById("financeiroDescricao").value
-    const tipo = document.getElementById("financeiroTipo").value
-    const categoria = document.getElementById("financeiroCategoria").value
-    const valor = Number(document.getElementById("financeiroValor").value)
-
-    if (!descricao || !tipo || !categoria || !valor) {
-      alert("Preencha todos os campos")
-      return
-    }
-
-    const novaMovimentacao = {
-      id: Date.now(),
-      descricao,
-      tipo,
-      categoria,
-      valor,
-      data: new Date().toLocaleDateString("pt-BR"),
-    }
-
-    financeiroSalvo.push(novaMovimentacao)
-
-    salvarFinanceiroLocalStorage()
-    carregarFinanceiro()
-    atualizarDashboardFinanceiro()
-
-    modalFinanceiro.classList.remove("active")
-
-    document.getElementById("financeiroDescricao").value = ""
-    document.getElementById("financeiroTipo").value = ""
-    document.getElementById("financeiroCategoria").value = ""
-    document.getElementById("financeiroValor").value = ""
-  })
-}
-
-// Inicialização
-carregarClientes()
-carregarProdutosSaida()
-carregarProdutosEntrada()
-carregarMateriasReceita()
-carregarReceitas()
-atualizarDashboardReceitas()
-carregarFabricacoes()
-atualizarDashboardFabricacao()
-carregarReceitasFabricacao()
-carregarMaterias()
-atualizarDashboardMateria()
-carregarProdutosNaVenda()
-carregarVendas()
-carregarProdutos()
-atualizarDashboard()
-atualizarResumo()
-atualizarDashboardVendas()
-carregarGraficosDashboard()
-carregarAlertasDashboard()
-carregarEstoque()
-atualizarDashboardClientes()
-carregarRelatorios()
-carregarFinanceiro()
-atualizarDashboardFinanceiro()
-
-
-
-// Service Worker
-if ("serviceWorker" in navigator) {
-  const caminhoSW = window.location.pathname.includes("/pages/")
-    ? "../service-worker.js"
-    : "./service-worker.js"
-
-  navigator.serviceWorker.register(caminhoSW)
-}
-
-window.addEventListener("load", () => {
-  document.body.classList.add("loaded")
-})
+/* =========================
+   MENU MOBILE
+========================= */
 
 const abrirMenuMobile = document.getElementById("abrirMenuMobile")
 const overlayMenu = document.getElementById("overlayMenu")
@@ -1606,3 +1649,51 @@ if (abrirMenuMobile && sidebar && overlayMenu) {
     })
   })
 }
+
+/* =========================
+   SERVICE WORKER
+========================= */
+
+if ("serviceWorker" in navigator) {
+  const caminhoSW = window.location.pathname.includes("/pages/")
+    ? "../service-worker.js"
+    : "./service-worker.js"
+
+  navigator.serviceWorker.register(caminhoSW)
+}
+
+/* =========================
+   INICIALIZAÇÃO
+========================= */
+
+function iniciarSistema() {
+  carregarClientes()
+  carregarProdutosSaida()
+  carregarProdutosEntrada()
+  carregarMateriasReceita()
+  carregarReceitas()
+  atualizarDashboardReceitas()
+  carregarFabricacoes()
+  atualizarDashboardFabricacao()
+  carregarReceitasFabricacao()
+  carregarMaterias()
+  atualizarDashboardMateria()
+  carregarProdutosNaVenda()
+  carregarVendas()
+  carregarProdutos()
+  atualizarDashboard()
+  atualizarResumo()
+  atualizarDashboardVendas()
+  carregarGraficosDashboard()
+  carregarAlertasDashboard()
+  carregarEstoque()
+  atualizarDashboardClientes()
+  carregarRelatorios()
+  carregarFinanceiro()
+  atualizarDashboardFinanceiro()
+}
+
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded")
+  iniciarSistema()
+})
