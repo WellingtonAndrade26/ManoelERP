@@ -1663,6 +1663,197 @@ if ("serviceWorker" in navigator) {
 }
 
 /* =========================
+   USUÁRIOS
+========================= */
+
+const modalUsuario = document.getElementById("modalUsuario")
+const abrirModalUsuario = document.getElementById("abrirModalUsuario")
+const fecharModalUsuario = document.getElementById("fecharModalUsuario")
+const salvarUsuario = document.getElementById("salvarUsuario")
+const tabelaUsuarios = document.getElementById("tabelaUsuarios")
+
+let usuariosSalvos = getStorage("usuarios", [
+  {
+    id: 1,
+    nome: "Manoel",
+    login: "manoel",
+    senha: "1234",
+    perfil: "Admin",
+    status: "Ativo",
+  },
+])
+
+function salvarUsuariosLocalStorage() {
+  setStorage("usuarios", usuariosSalvos)
+}
+
+function carregarUsuarios() {
+  if (!tabelaUsuarios) return
+
+  tabelaUsuarios.innerHTML = ""
+
+  usuariosSalvos.forEach((usuario) => {
+    tabelaUsuarios.innerHTML += `
+      <tr>
+        <td>${usuario.nome}</td>
+        <td>${usuario.login}</td>
+        <td>${usuario.perfil}</td>
+        <td class="green">${usuario.status || "Ativo"}</td>
+        <td>
+          <button onclick="excluirUsuario(${usuario.id})">Excluir</button>
+        </td>
+      </tr>
+    `
+  })
+}
+
+function atualizarDashboardUsuarios() {
+  const totalEl = document.getElementById("usuariosTotal")
+  const adminsEl = document.getElementById("usuariosAdmins")
+  const funcionariosEl = document.getElementById("usuariosFuncionarios")
+
+  if (!totalEl) return
+
+  const admins = usuariosSalvos.filter(
+    (usuario) => usuario.perfil === "Admin"
+  ).length
+
+  const funcionarios = usuariosSalvos.filter(
+    (usuario) => usuario.perfil === "Funcionário"
+  ).length
+
+  totalEl.innerText = usuariosSalvos.length
+  adminsEl.innerText = admins
+  funcionariosEl.innerText = funcionarios
+}
+
+function excluirUsuario(id) {
+  if (usuariosSalvos.length === 1) {
+    alert("Não é possível excluir o único usuário do sistema")
+    return
+  }
+
+  usuariosSalvos = usuariosSalvos.filter((usuario) => usuario.id !== id)
+
+  salvarUsuariosLocalStorage()
+  carregarUsuarios()
+  atualizarDashboardUsuarios()
+}
+
+if (abrirModalUsuario) {
+  abrirModalUsuario.addEventListener("click", () => {
+    modalUsuario?.classList.add("active")
+  })
+}
+
+if (fecharModalUsuario) {
+  fecharModalUsuario.addEventListener("click", () => {
+    modalUsuario?.classList.remove("active")
+  })
+}
+
+if (salvarUsuario) {
+  salvarUsuario.addEventListener("click", () => {
+    const nome = document.getElementById("usuarioNome").value
+    const login = document.getElementById("usuarioLogin").value
+    const senha = document.getElementById("usuarioSenha").value
+    const perfil = document.getElementById("usuarioPerfil").value
+
+    if (!nome || !login || !senha || !perfil) {
+      alert("Preencha todos os campos")
+      return
+    }
+
+    const usuarioExiste = usuariosSalvos.some(
+      (usuario) => usuario.login.toLowerCase() === login.toLowerCase()
+    )
+
+    if (usuarioExiste) {
+      alert("Esse usuário já existe")
+      return
+    }
+
+    usuariosSalvos.push({
+      id: Date.now(),
+      nome,
+      login,
+      senha,
+      perfil,
+      status: "Ativo",
+    })
+
+    salvarUsuariosLocalStorage()
+    carregarUsuarios()
+    atualizarDashboardUsuarios()
+
+    modalUsuario?.classList.remove("active")
+
+    document.getElementById("usuarioNome").value = ""
+    document.getElementById("usuarioLogin").value = ""
+    document.getElementById("usuarioSenha").value = ""
+    document.getElementById("usuarioPerfil").value = ""
+  })
+}
+
+/* =========================
+   USUÁRIO LOGADO / PERMISSÕES
+========================= */
+
+function aplicarUsuarioLogado() {
+  const nomeUsuario = localStorage.getItem("usuarioLogado") || "Usuário"
+  const perfilUsuario = localStorage.getItem("perfilUsuario") || "Funcionário"
+
+  const usuarioNomeSidebar = document.getElementById("usuarioNomeSidebar")
+  const usuarioPerfilSidebar = document.getElementById("usuarioPerfilSidebar")
+  const avatarUsuario = document.getElementById("avatarUsuario")
+
+  if (usuarioNomeSidebar) {
+    usuarioNomeSidebar.innerText = nomeUsuario
+  }
+
+  if (usuarioPerfilSidebar) {
+    usuarioPerfilSidebar.innerText = perfilUsuario
+  }
+
+  if (avatarUsuario) {
+    avatarUsuario.innerText = nomeUsuario.charAt(0).toUpperCase()
+  }
+}
+
+function aplicarPermissoes() {
+  const perfilUsuario = localStorage.getItem("perfilUsuario") || "Funcionário"
+
+  const itensAdmin = document.querySelectorAll("[data-admin='true']")
+
+  if (perfilUsuario !== "Admin") {
+    itensAdmin.forEach((item) => {
+      item.style.display = "none"
+    })
+
+    const paginaAtual = window.location.pathname
+
+    const paginasBloqueadas = [
+      "usuarios.html",
+      "financeiro.html",
+    ]
+
+    const estaEmPaginaBloqueada = paginasBloqueadas.some((pagina) =>
+      paginaAtual.includes(pagina)
+    )
+
+    if (estaEmPaginaBloqueada) {
+      alert("Você não tem permissão para acessar esta página")
+
+      const caminhoResumo = window.location.pathname.includes("/pages/")
+        ? "../index.html"
+        : "./index.html"
+
+      window.location.href = caminhoResumo
+    }
+  }
+}
+
+/* =========================
    INICIALIZAÇÃO
 ========================= */
 
@@ -1691,6 +1882,10 @@ function iniciarSistema() {
   carregarRelatorios()
   carregarFinanceiro()
   atualizarDashboardFinanceiro()
+  carregarUsuarios()
+  atualizarDashboardUsuarios()
+  aplicarUsuarioLogado()
+  aplicarPermissoes()
 }
 
 window.addEventListener("load", () => {

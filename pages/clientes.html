@@ -79,7 +79,7 @@
     </button>
   </a>
 
-  <a href="./receitas.html">
+  <a href="./receitas.html" data-admin="true">
     <button class="menu-btn">
       <i class="fa-solid fa-utensils"></i>
       <span>Receitas</span>
@@ -107,33 +107,40 @@
     </button>
   </a>
 
-  <a href="./relatorios.html">
+  <a href="./relatorios.html" data-admin="true">
     <button class="menu-btn">
       <i class="fa-solid fa-file-lines"></i>
       <span>Relatórios</span>
     </button>
   </a>
 
-  <a href="./financeiro.html">
+  <a href="./financeiro.html" data-admin="true">
     <button class="menu-btn">
       <i class="fa-solid fa-sack-dollar"></i>
       <span>Financeiro</span>
     </button>
   </a>
+
+  <a class="menu-btn" href="./usuarios.html" data-admin="true">
+  <i class="fa-solid fa-user-gear"></i>
+  <span>Usuários</span>
+</a>
+
 </nav>
         </div>
 
-        <div class="user">
-          <div class="avatar">M</div>
+       <div class="user">
+  <div class="avatar" id="avatarUsuario">U</div>
 
-          <div>
-            <strong>Manoel</strong>
-            <p>Administrador</p>
-          </div>
-          <button class="btn-light" id="sairSistema">
-  Sair
-</button>
-        </div>
+  <div>
+    <strong id="usuarioNomeSidebar">Usuário</strong>
+    <p id="usuarioPerfilSidebar">Perfil</p>
+  </div>
+
+  <button class="btn-light" id="sairSistema">
+    Sair
+  </button>
+</div>
       </aside>
 
       <!-- CONTEÚDO -->

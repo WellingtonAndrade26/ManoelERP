@@ -4,33 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-/>
+    <title>Usuários | Artesanais do Manoel</title>
 
-    <title>Receitas | Artesanais do Manoel</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
     <link rel="stylesheet" href="../style.css" />
 
-<script>
-  if (localStorage.getItem("tema") === "dark") {
-    document.documentElement.classList.add("dark")
-  }
-</script>
-
+    <script>
+      if (localStorage.getItem("tema") === "dark") {
+        document.documentElement.classList.add("dark")
+      }
+    </script>
   </head>
 
   <body>
+    <div class="mobile-header">
+      <button id="abrirMenuMobile" class="mobile-menu-btn">
+        <i class="fa-solid fa-bars"></i>
+      </button>
 
-<div class="mobile-header">
-  <button id="abrirMenuMobile" class="mobile-menu-btn">
-    <i class="fa-solid fa-bars"></i>
-  </button>
+      <h2 class="mobile-title">Usuários</h2>
+    </div>
 
-  <h2 class="mobile-title">Receitas</h2>
-</div>
-
-<div id="overlayMenu" class="overlay-menu"></div>
+    <div id="overlayMenu" class="overlay-menu"></div>
 
     <div class="app">
       <aside class="sidebar">
@@ -42,11 +41,11 @@
 
             <div>
               <h1>Artesanais do Manoel</h1>
-              <p>Sistema de gerenciamento</p>
+              <p>Controle de produtos, estoque e clientes</p>
             </div>
           </div>
 
-             <nav class="menu" id="sidebarMenu">
+         <nav class="menu" id="sidebarMenu">
   <a href="../index.html">
     <button class="menu-btn">
       <i class="fa-solid fa-chart-line"></i>
@@ -76,7 +75,7 @@
   </a>
 
   <a href="./receitas.html" data-admin="true">
-    <button class="menu-btn active">
+    <button class="menu-btn">
       <i class="fa-solid fa-utensils"></i>
       <span>Receitas</span>
     </button>
@@ -116,7 +115,7 @@
     </button>
   </a>
 
-<a class="menu-btn" href="./usuarios.html" data-admin="true">
+<a class="menu-btn active" href="./usuarios.html" data-admin="true">
   <i class="fa-solid fa-user-gear"></i>
   <span>Usuários</span>
 </a>
@@ -141,100 +140,106 @@
       <main class="content">
         <header class="top">
           <div>
-            <h2>Receitas</h2>
-            <p>Cadastre receitas e calcule o custo de fabricação.</p>
+            <h2>Usuários</h2>
+            <p>Cadastre pessoas autorizadas a acessar o sistema.</p>
           </div>
 
-          <button class="btn-primary" id="abrirModalReceita">
-            + Nova receita
+          <button class="btn-primary" id="abrirModalUsuario">
+            + Novo usuário
           </button>
         </header>
 
         <section class="cards">
           <div class="card">
-            <span>Receitas</span>
-            <strong id="receitasTotal">0</strong>
-            <p>Cadastradas</p>
+            <span>Total usuários</span>
+            <strong id="usuariosTotal">0</strong>
+            <p>Cadastrados</p>
           </div>
 
           <div class="card">
-            <span>Custo médio</span>
-            <strong id="receitasCustoMedio">R$ 0</strong>
-            <p>Por receita</p>
+            <span>Administradores</span>
+            <strong id="usuariosAdmins">0</strong>
+            <p>Acesso completo</p>
           </div>
 
           <div class="card">
-            <span>Ingredientes</span>
-            <strong id="receitasIngredientes">0</strong>
-            <p>Total usados</p>
+            <span>Funcionários</span>
+            <strong id="usuariosFuncionarios">0</strong>
+            <p>Acesso operacional</p>
           </div>
 
           <div class="card">
-            <span>Maior custo</span>
-            <strong id="receitasMaiorCusto">R$ 0</strong>
-            <p>Receita mais cara</p>
+            <span>Status</span>
+            <strong class="green">Ativo</strong>
+            <p>Sistema liberado</p>
           </div>
         </section>
 
         <section class="panel">
           <div class="filters">
-            <input type="text" placeholder="Buscar receita..." />
+            <input type="text" placeholder="Buscar usuário..." />
+
             <select>
-              <option>Todas receitas</option>
+              <option>Todos perfis</option>
+              <option>Admin</option>
+              <option>Funcionário</option>
             </select>
-            <button class="btn-light">Exportar</button>
+
+            <button class="btn-light">
+              Exportar
+            </button>
           </div>
 
           <table>
             <thead>
               <tr>
-                <th>Receita</th>
-                <th>Rendimento</th>
-                <th>Ingredientes</th>
-                <th>Custo estimado</th>
-                <th>Custo/kg</th>
+                <th>Nome</th>
+                <th>Usuário</th>
+                <th>Perfil</th>
+                <th>Status</th>
                 <th>Ações</th>
               </tr>
             </thead>
 
-            <tbody id="tabelaReceitas"></tbody>
+            <tbody id="tabelaUsuarios"></tbody>
           </table>
         </section>
       </main>
     </div>
 
-    <div class="modal" id="modalReceita">
+    <div class="modal" id="modalUsuario">
       <div class="modal-content">
-        <h2>Nova Receita</h2>
+        <h2>Novo Usuário</h2>
 
-        <input type="text" id="receitaNome" placeholder="Nome da receita" />
-        <input type="number" id="receitaRendimento" placeholder="Rendimento em kg" />
+        <input type="text" id="usuarioNome" placeholder="Nome completo" />
+        <input type="text" id="usuarioLogin" placeholder="Usuário para login" />
+        <input type="password" id="usuarioSenha" placeholder="Senha" />
 
-        <select id="receitaMateria">
-          <option value="">Selecione uma matéria-prima</option>
+        <select id="usuarioPerfil">
+          <option value="">Selecione o perfil</option>
+          <option value="Admin">Admin</option>
+          <option value="Funcionário">Funcionário</option>
         </select>
 
-        <input type="number" id="receitaQuantidade" placeholder="Quantidade usada" />
-
-        <button id="adicionarIngrediente" class="btn-light">
-          + Adicionar ingrediente
-        </button>
-
-        <div id="listaIngredientes" class="ingredientes-lista"></div>
-
         <div class="modal-buttons">
-          <button id="salvarReceita" class="btn-primary">Salvar receita</button>
-          <button id="fecharModalReceita" class="btn-light">Cancelar</button>
+          <button id="salvarUsuario" class="btn-primary">
+            Salvar usuário
+          </button>
+
+          <button id="fecharModalUsuario" class="btn-light">
+            Cancelar
+          </button>
         </div>
       </div>
     </div>
 
-<script src="../data/produtos.js"></script>
-<script src="../data/vendas.js"></script>
-<script src="../data/materiaPrima.js"></script>
-<script src="../data/fabricacoes.js"></script>
-<script src="../data/receitas.js"></script>
-<script src="../data/clientes.js"></script>
-<script src="../script.js"></script>
+    <script src="../data/produtos.js"></script>
+    <script src="../data/vendas.js"></script>
+    <script src="../data/materiaPrima.js"></script>
+    <script src="../data/fabricacoes.js"></script>
+    <script src="../data/receitas.js"></script>
+    <script src="../data/clientes.js"></script>
+    <script src="../data/financeiro.js"></script>
+    <script src="../script.js"></script>
   </body>
 </html>
